@@ -1,0 +1,16 @@
+MODEL:
+  META_ARCHITECTURE: "CustomRCNN"
+  MASK_ON: True
+  PROPOSAL_GENERATOR:
+    NAME: "CenterNet"
+  WEIGHTS: "models/resnet50_miil_21k.pkl"
+  BACKBONE:
+    NAME: build_p67_timm_fpn_backbone
+  TIMM:
+    BASE_NAME: resnet50_in21k
+  FPN:
+    IN_FEATURES: ["layer3", "layer4", "layer5"]
+  PIXEL_MEAN: [123.675, 116.280, 103.530]
+  PIXEL_STD: [58.395, 57.12, 57.375]
+  ROI_HEADS:
+    NAME: Deti
