@@ -3,4 +3,14 @@ MODEL:
   MASK_ON: false
   # WEIGHTS: "models/BoxSup-C2_LCOCO_CLIP_SwinB_896b32_4x.pth"
   WEIGHTS: models/Detic_LCOCOI21k_CLIP_SwinB_896b32_4x_ft4x_max-size.pth
-  DYNAMIC_CLASSIFIER: false              # it samples classe
+  DYNAMIC_CLASSIFIER: false              # it samples classes for an epoch/iteration when dealing with large number of classes like in LVIS.
+  NUM_SAMPLE_CATS: 4                   # num sample cats for fed loss (negatives+postives from GT)
+  ROI_BOX_HEAD:
+    USE_ZEROSHOT_CLS: true
+    IMAGE_LABEL_LOSS: max_size
+    ZEROSHOT_WEIGHT_PATH: rand
+    FED_LOSS_NUM_CAT: 4           # doesn't matter for deterministic negatives
+    USE_FED_LOSS: true # Federated loss is enabled when DYNAMIC_CLASSIFIER is on
+    CAT_FREQ_PATH: datasets/metadata/nuimages_v1.0-train_cat_info.json         # used for dynamic classifier
+
+    # used for determining sampling st
