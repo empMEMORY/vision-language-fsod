@@ -22,4 +22,17 @@ MODEL:
     NUM_CLASSES: 18
     SCORE_THRESH_TEST: 0.02     # confidence_threshold for score filtering
     NMS_THRESH_TEST: 1.0     # always 1.0: done to prevent intra-class nms from working before relabeling predictions (otherwise would reduce AP or increase FalsePositives for certain classes)
-    P
+    POST_LABELING_NMS_THRESH_TEST: 0.5            # key nms threshold
+  BACKBONE:
+    NAME: build_swintransformer_fpn_backbone
+  SWIN:
+    SIZE: B-22k
+  FPN:
+    IN_FEATURES: [swin1, swin2, swin3]
+  CENTERNET:
+    POST_NMS_TOPK_TEST: 512
+  RESET_CLS_TESTS: true                 # set to True to use clip clf weights
+  RESET_CLS_TRAIN: true                 # set to True to use clip clf weights
+  TRAIN_CLASSIFIERS: ("datasets/metadata/nuimages_all_cls_no_wc.npy",)   #supports only 1 element in list
+  TRAIN_NUM_CLASSES: [18]
+  TEST_CLASSIFIERS: ("datasets/metadata/nuimages_all_cls_no_wc.n
