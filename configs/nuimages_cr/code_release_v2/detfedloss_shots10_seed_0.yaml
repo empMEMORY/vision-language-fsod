@@ -59,4 +59,11 @@ DATASETS:
     {"id": 4, "name": "trailer", "supercategory": "vehicle"}, {"id": 5, "name": "emergency",
     "supercategory": "vehicle"}, {"id": 6, "name": "motorcycle", "supercategory":
     "vehicle"}, {"id": 7, "name": "bicycle", "supercategory": "vehicle"}, {"id": 8,
-    "name": "adult", "supercategory": "pedestrian"}, {"id": 9, "name": "child",
+    "name": "adult", "supercategory": "pedestrian"}, {"id": 9, "name": "child", "supercategory":  "pedestrian"},
+    {"id": 10, "name": "police_officer", "supercategory":  "pedestrian"}, {"id": 11,
+    "name": "construction_worker", "supercategory":  "pedestrian"}, {"id": 12, "name":
+    "personal_mobility", "supercategory": "pedestrian"}, {"id": 13, "name": "stroller",
+    "supercategory": "pedestrian"}, {"id": 14, "name": "pushable_pullable", "supercategory":  "movable_object"},
+    {"id": 15, "name": "barrier", "supercategory": "movable_object"}, {"id": 16, "name":
+    "traffic_cone", "supercategory": "movable_object"}, {"id": 17, "name": "debris",
+    "supercategory
