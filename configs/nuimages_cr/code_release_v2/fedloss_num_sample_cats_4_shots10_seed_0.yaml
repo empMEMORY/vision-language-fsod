@@ -1,0 +1,34 @@
+
+_BASE_: Base-C2_L_R5021k_640b64_4x.yaml
+MODEL:
+  MASK_ON: false
+  # WEIGHTS: "models/BoxSup-C2_LCOCO_CLIP_SwinB_896b32_4x.pth"
+  WEIGHTS: models/Detic_LCOCOI21k_CLIP_SwinB_896b32_4x_ft4x_max-size.pth
+  DYNAMIC_CLASSIFIER: false              # it samples classes for an epoch/iteration when dealing with large number of classes like in LVIS.
+  NUM_SAMPLE_CATS: 4                   # num sample cats for fed loss (negatives+postives from GT)
+  ROI_BOX_HEAD:
+    USE_ZEROSHOT_CLS: true
+    IMAGE_LABEL_LOSS: max_size
+    ZEROSHOT_WEIGHT_PATH: rand
+    FED_LOSS_NUM_CAT: 4           # doesn't matter for deterministic negatives
+    USE_FED_LOSS: true # Federated loss is enabled when DYNAMIC_CLASSIFIER is on
+    CAT_FREQ_PATH: datasets/metadata/nuimages_v1.0-train_cat_info.json         # used for dynamic classifier
+
+    # used for determining sampling strategy during fedloss and its variants; also used to determine pseudonegatives-- replace GT with predictions 
+    ALL_ANN_FILE: datasets/nuimages/annotations/no_wc/nuimages_v1.0-train.json    
+      
+    INVERSE_WEIGHTS: false                 # inverse fedloss
+    DETERMINISTIC_FED_LOSS: false           # detfedloss
+  ROI_HEADS:
+    NUM_CLASSES: 18
+    SCORE_THRESH_TEST: 0.02     # confidence_threshold for score filtering
+    NMS_THRESH_TEST: 1.0     # always 1.0: done to prevent intra-class nms from working before relabeling predictions (otherwise would reduce AP or increase FalsePositives for certain classes)
+    POST_LABELING_NMS_THRESH_TEST: 0.5            # key nms threshold
+  BACKBONE:
+    NAME: build_swintransformer_fpn_backbone
+  SWIN:
+    SIZE: B-22k
+  FPN:
+    IN_FEATURES: [swin1, swin2, swin3]
+  CENTERNET:
+    POST_NMS_TOPK_TEST: 512

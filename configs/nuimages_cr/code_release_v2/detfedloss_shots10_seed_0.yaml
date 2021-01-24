@@ -66,4 +66,25 @@ DATASETS:
     "supercategory": "pedestrian"}, {"id": 14, "name": "pushable_pullable", "supercategory":  "movable_object"},
     {"id": 15, "name": "barrier", "supercategory": "movable_object"}, {"id": 16, "name":
     "traffic_cone", "supercategory": "movable_object"}, {"id": 17, "name": "debris",
-    "supercategory
+    "supercategory": "movable_object"} ]'
+  NUM_ORIG_CLASSES: 18
+DATALOADER:
+  SAMPLER_TRAIN: TrainingSampler
+  SAMPLER_VAL: InferenceSampler
+  DATASET_RATIO: [1]
+  USE_DIFF_BS_SIZE: true
+  DATASET_BS: [32]
+  DATASET_INPUT_SIZE: [1600]    # not related to input image size
+  USE_RFS: [true, false]
+  DATASET_INPUT_SCALE: [[0.1, 2.0]]
+  FILTER_EMPTY_ANNOTATIONS: false
+  MULTI_DATASET_GROUPING: false
+  DATASET_ANN: [box]
+  NUM_WORKERS: 4
+  USE_TAR_DATASET: false
+WITH_IMAGE_LABELS: false
+INPUT:
+  MIN_SIZE_TEST: 900
+  MAX_SIZE_TEST: 1600
+  # MIN_SIZE_TRAIN: 
+  MAX_SIZE_TRAIN: 1600
