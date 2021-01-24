@@ -8,4 +8,12 @@ MODEL:
   ROI_BOX_HEAD:
     USE_ZEROSHOT_CLS: true
     IMAGE_LABEL_LOSS: max_size
-    ZE
+    ZEROSHOT_WEIGHT_PATH: rand
+    FED_LOSS_NUM_CAT: 4           # doesn't matter for deterministic negatives
+    USE_FED_LOSS: true # Federated loss is enabled when DYNAMIC_CLASSIFIER is on
+    CAT_FREQ_PATH: datasets/metadata/nuimages_v1.0-train_cat_info.json         # used for dynamic classifier
+
+    # used for determining sampling strategy during fedloss and its variants; also used to determine pseudonegatives-- replace GT with predictions 
+    ALL_ANN_FILE: datasets/nuimages/annotations/no_wc/nuimages_v1.0-train.json    
+      
+    INVERSE_WEIGHTS: true                
