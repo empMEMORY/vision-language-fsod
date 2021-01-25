@@ -16,4 +16,16 @@ MODEL:
     # used for determining sampling strategy during fedloss and its variants; also used to determine pseudonegatives-- replace GT with predictions 
     ALL_ANN_FILE: datasets/nuimages/annotations/no_wc/nuimages_v1.0-train.json    
       
-    INVERSE_WEIGHTS: true                
+    INVERSE_WEIGHTS: true                # inverse fedloss
+    DETERMINISTIC_FED_LOSS: false           # detfedloss
+  ROI_HEADS:
+    NUM_CLASSES: 18
+    SCORE_THRESH_TEST: 0.02     # confidence_threshold for score filtering
+    NMS_THRESH_TEST: 1.0     # always 1.0: done to prevent intra-class nms from working before relabeling predictions (otherwise would reduce AP or increase FalsePositives for certain classes)
+    POST_LABELING_NMS_THRESH_TEST: 0.5            # key nms threshold
+  BACKBONE:
+    NAME: build_swintransformer_fpn_backbone
+  SWIN:
+    SIZE: B-22k
+  FPN:
+    IN_FEATURES: [swin1, swin2, swin3]
