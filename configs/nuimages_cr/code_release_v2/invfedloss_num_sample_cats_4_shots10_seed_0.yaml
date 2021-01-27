@@ -29,3 +29,16 @@ MODEL:
     SIZE: B-22k
   FPN:
     IN_FEATURES: [swin1, swin2, swin3]
+  CENTERNET:
+    POST_NMS_TOPK_TEST: 512
+  RESET_CLS_TESTS: true                 # set to True to use clip clf weights
+  RESET_CLS_TRAIN: true                 # set to True to use clip clf weights
+  TRAIN_CLASSIFIERS: ("datasets/metadata/nuimages_all_cls_no_wc.npy",)   #supports only 1 element in list
+  TRAIN_NUM_CLASSES: [18]
+  TEST_CLASSIFIERS: ("datasets/metadata/nuimages_all_cls_no_wc.npy",)
+  TEST_NUM_CLASSES: [18]
+TEST:
+  DETECTIONS_PER_IMAGE: 1000                                  # causing lot of memory usage (RAM); can crash if kept around 10k
+  VAL_PERIOD: 0
+SOLVER:
+  FREEZE_BACKBONE: true
