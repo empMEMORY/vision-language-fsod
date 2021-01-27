@@ -42,3 +42,17 @@ TEST:
   VAL_PERIOD: 0
 SOLVER:
   FREEZE_BACKBONE: true
+  FINETUNE_MODEL_KEYWORDS: [roi_heads]
+  MAX_ITER: 8000
+  IMS_PER_BATCH: 8             # batchsize
+  BASE_LR: 3.75e-6
+  WARMUP_ITERS: 50    # original 1000
+  CHECKPOINT_PERIOD: 300
+  WARMUP_FACTOR: 0.01
+DATASETS:
+  TRAIN: ("nuimages_fsod_train_seed_0_shots_10",)          # use the name in train to get val data file
+  TEST: ("nuimages_all_cls_val_no_wc",)
+  # RELABEL_PREDS: false
+  ALL_CLASSES: '[ {"id": 0, "name": "car", "supercategory": "vehicle"}, {"id": 1,
+    "name": "truck", "supercategory": "vehicle"}, {"id": 2, "name": "construction_vehicle",
+    "supercategory": "vehicle"}, {"id": 3, 
