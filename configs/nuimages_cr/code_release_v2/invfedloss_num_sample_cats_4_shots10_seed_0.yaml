@@ -62,4 +62,17 @@ DATASETS:
     "name": "adult", "supercategory": "pedestrian"}, {"id": 9, "name": "child", "supercategory":  "pedestrian"},
     {"id": 10, "name": "police_officer", "supercategory":  "pedestrian"}, {"id": 11,
     "name": "construction_worker", "supercategory":  "pedestrian"}, {"id": 12, "name":
-    "personal_mobility", "superc
+    "personal_mobility", "supercategory": "pedestrian"}, {"id": 13, "name": "stroller",
+    "supercategory": "pedestrian"}, {"id": 14, "name": "pushable_pullable", "supercategory":  "movable_object"},
+    {"id": 15, "name": "barrier", "supercategory": "movable_object"}, {"id": 16, "name":
+    "traffic_cone", "supercategory": "movable_object"}, {"id": 17, "name": "debris",
+    "supercategory": "movable_object"} ]'
+  NUM_ORIG_CLASSES: 18
+DATALOADER:
+  SAMPLER_TRAIN: TrainingSampler
+  SAMPLER_VAL: InferenceSampler
+  DATASET_RATIO: [1]
+  USE_DIFF_BS_SIZE: true
+  DATASET_BS: [32]
+  DATASET_INPUT_SIZE: [1600]    # not related to input image size
+  USE_RFS: [
