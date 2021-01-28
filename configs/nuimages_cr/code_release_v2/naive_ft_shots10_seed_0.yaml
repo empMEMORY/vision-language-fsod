@@ -1,0 +1,6 @@
+_BASE_: Base-C2_L_R5021k_640b64_4x.yaml
+MODEL:
+  MASK_ON: false
+  # WEIGHTS: "models/BoxSup-C2_LCOCO_CLIP_SwinB_896b32_4x.pth"
+  WEIGHTS: models/Detic_LCOCOI21k_CLIP_SwinB_896b32_4x_ft4x_max-size.pth
+  DYNAMIC_CLASSIFIER: false              # it samples classes for an epoch/iteration when dealing with large nu
