@@ -1,3 +1,4 @@
+
 _BASE_: Base-C2_L_R5021k_640b64_4x.yaml
 MODEL:
   MASK_ON: false
@@ -10,14 +11,13 @@ MODEL:
     IMAGE_LABEL_LOSS: max_size
     ZEROSHOT_WEIGHT_PATH: rand
     FED_LOSS_NUM_CAT: 4           # doesn't matter for deterministic negatives
-    USE_FED_LOSS: false # Federated loss is enabled when DYNAMIC_CLASSIFIER is on
+    USE_FED_LOSS: true # Federated loss is enabled when DYNAMIC_CLASSIFIER is on
     CAT_FREQ_PATH: datasets/metadata/nuimages_v1.0-train_cat_info.json         # used for dynamic classifier
 
-    # used for determining sampling strategy during fedloss and its variants; also used to determine pseudonegatives-- replace GT with predictions 
-    ALL_ANN_FILE: datasets/nuimages/annotations/no_wc/nuimages_v1.0-train.json    
-      
-    INVERSE_WEIGHTS: false                # inverse fedloss
-    DETERMINISTIC_FED_LOSS: false           # detfedloss
+    # used to determine pseudonegatives-- the path corresponds to predictions on FSOD trainset converted to COCO format
+    ALL_ANN_FILE: results/nuimages/10_shots/naive_ft_shots10_seed_0_eval_trainset/inference_nuimages_fsod_train_seed_0_shots_10/trainval_preds_coco_fmt_conf_thresh_0.2.json
+    INVERSE_WEIGHTS: false                 # inverse fedloss
+    DETERMINISTIC_FED_LOSS: true           # detfedloss
   ROI_HEADS:
     NUM_CLASSES: 18
     SCORE_THRESH_TEST: 0.02     # confidence_threshold for score filtering
@@ -79,12 +79,3 @@ DATALOADER:
   DATASET_INPUT_SCALE: [[0.1, 2.0]]
   FILTER_EMPTY_ANNOTATIONS: false
   MULTI_DATASET_GROUPING: false
-  DATASET_ANN: [box]
-  NUM_WORKERS: 4
-  USE_TAR_DATASET: false
-WITH_IMAGE_LABELS: false
-INPUT:
-  MIN_SIZE_TEST: 900
-  MAX_SIZE_TEST: 1600
-  # MIN_SIZE_TRAIN: 
-  MAX_SIZE_TRAIN: 1600
