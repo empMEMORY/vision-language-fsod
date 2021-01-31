@@ -53,4 +53,11 @@ DATASETS:
   TRAIN: ("nuimages_fsod_train_seed_0_shots_10",)          # use the name in train to get val data file
   TEST: ("nuimages_all_cls_val_no_wc",)
   # RELABEL_PREDS: false
-  ALL_CLASSES: '[ {"id": 0, "name": "car", "su
+  ALL_CLASSES: '[ {"id": 0, "name": "car", "supercategory": "vehicle"}, {"id": 1,
+    "name": "truck", "supercategory": "vehicle"}, {"id": 2, "name": "construction_vehicle",
+    "supercategory": "vehicle"}, {"id": 3, "name": "bus", "supercategory": "vehicle"},
+    {"id": 4, "name": "trailer", "supercategory": "vehicle"}, {"id": 5, "name": "emergency",
+    "supercategory": "vehicle"}, {"id": 6, "name": "motorcycle", "supercategory":
+    "vehicle"}, {"id": 7, "name": "bicycle", "supercategory": "vehicle"}, {"id": 8,
+    "name": "adult", "supercategory": "pedestrian"}, {"id": 9, "name": "child", "supercategory":  "pedestrian"},
+   
