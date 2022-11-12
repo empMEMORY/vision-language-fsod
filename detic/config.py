@@ -31,4 +31,15 @@ def add_detic_config(cfg):
     _C.MODEL.ROI_BOX_HEAD.ADD_IMAGE_BOX = False # Used for image-box loss and caption loss
     _C.MODEL.ROI_BOX_HEAD.WS_NUM_PROPS = 128 # num proposals for image-labeled data
     _C.MODEL.ROI_BOX_HEAD.WITH_SOFTMAX_PROP = False # Used for WSDDN
-    _C.MODEL.ROI
+    _C.MODEL.ROI_BOX_HEAD.CAPTION_WEIGHT = 1.0 # Caption loss weight
+    _C.MODEL.ROI_BOX_HEAD.NEG_CAP_WEIGHT = 0.125 # Caption loss hyper-parameter
+    _C.MODEL.ROI_BOX_HEAD.ADD_FEATURE_TO_PROP = False # Used for WSDDN
+    _C.MODEL.ROI_BOX_HEAD.SOFTMAX_WEAK_LOSS = False # Used when USE_SIGMOID_CE is False
+
+    _C.MODEL.ROI_HEADS.MASK_WEIGHT = 1.0
+    _C.MODEL.ROI_HEADS.ONE_CLASS_PER_PROPOSAL = False # For demo only
+
+    # Caption losses
+    _C.MODEL.CAP_BATCH_RATIO = 4 # Ratio between detection data and caption data
+    _C.MODEL.WITH_CAPTION = False
+    _C.MODEL.SYNC_CAPTION_BATCH = False # synchronize across GPUs to en
