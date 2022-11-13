@@ -42,4 +42,22 @@ def add_detic_config(cfg):
     # Caption losses
     _C.MODEL.CAP_BATCH_RATIO = 4 # Ratio between detection data and caption data
     _C.MODEL.WITH_CAPTION = False
-    _C.MODEL.SYNC_CAPTION_BATCH = False # synchronize across GPUs to en
+    _C.MODEL.SYNC_CAPTION_BATCH = False # synchronize across GPUs to enlarge # "classes"
+
+    # dynamic class sampling when training with 21K classes
+    _C.MODEL.DYNAMIC_CLASSIFIER = False
+    _C.MODEL.NUM_SAMPLE_CATS = 50
+
+    # Different classifiers in testing, used in cross-dataset evaluation
+    _C.MODEL.RESET_CLS_TESTS = False
+    _C.MODEL.TEST_CLASSIFIERS = []
+    _C.MODEL.TEST_NUM_CLASSES = []
+
+    # Backbones
+    _C.MODEL.SWIN = CN()
+    _C.MODEL.SWIN.SIZE = 'T' # 'T', 'S', 'B'
+    _C.MODEL.SWIN.USE_CHECKPOINT = False
+    _C.MODEL.SWIN.OUT_FEATURES = (1, 2, 3) # FPN stride 8 - 32
+
+    _C.MODEL.TIMM = CN()
+    _C.MODEL.TIMM.BASE_N
