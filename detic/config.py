@@ -73,4 +73,9 @@ def add_detic_config(cfg):
     _C.DATALOADER.MULTI_DATASET_GROUPING = False # Always true when multi-dataset is enabled
     _C.DATALOADER.DATASET_ANN = ['box', 'box'] # Annotation type of each dataset
     _C.DATALOADER.USE_DIFF_BS_SIZE = False # Use different batchsize for each dataset
-    _C.DAT
+    _C.DATALOADER.DATASET_BS = [8, 32] # Used when USE_DIFF_BS_SIZE is on
+    _C.DATALOADER.DATASET_INPUT_SIZE = [896, 384] # Used when USE_DIFF_BS_SIZE is on
+    _C.DATALOADER.DATASET_INPUT_SCALE = [(0.1, 2.0), (0.5, 1.5)] # Used when USE_DIFF_BS_SIZE is on 
+    _C.DATALOADER.DATASET_MIN_SIZES = [(640, 800), (320, 400)] # Used when USE_DIFF_BS_SIZE is on
+    _C.DATALOADER.DATASET_MAX_SIZES = [1333, 667] # Used when USE_DIFF_BS_SIZE is on      #can try to change this to [1600, 900]
+    _C.DATALOADER.USE_TAR_DATASET = False # for ImageNet-21K, directly reading from unzipe
