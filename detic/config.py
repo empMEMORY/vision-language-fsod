@@ -78,4 +78,20 @@ def add_detic_config(cfg):
     _C.DATALOADER.DATASET_INPUT_SCALE = [(0.1, 2.0), (0.5, 1.5)] # Used when USE_DIFF_BS_SIZE is on 
     _C.DATALOADER.DATASET_MIN_SIZES = [(640, 800), (320, 400)] # Used when USE_DIFF_BS_SIZE is on
     _C.DATALOADER.DATASET_MAX_SIZES = [1333, 667] # Used when USE_DIFF_BS_SIZE is on      #can try to change this to [1600, 900]
-    _C.DATALOADER.USE_TAR_DATASET = False # for ImageNet-21K, directly reading from unzipe
+    _C.DATALOADER.USE_TAR_DATASET = False # for ImageNet-21K, directly reading from unziped files
+    _C.DATALOADER.TARFILE_PATH = 'datasets/imagenet/metadata-22k/tar_files.npy'
+    _C.DATALOADER.TAR_INDEX_DIR = 'datasets/imagenet/metadata-22k/tarindex_npy'
+    
+    _C.DATASETS.RELABEL_PREDS = False
+    _C.DATASETS.ALL_CLASSES = None
+    _C.DATASETS.NUM_ORIG_CLASSES= None
+
+    _C.SOLVER.USE_CUSTOM_SOLVER = False
+    _C.SOLVER.OPTIMIZER = 'SGD'
+    _C.SOLVER.BACKBONE_MULTIPLIER = 1.0 # Used in DETR
+    _C.SOLVER.CUSTOM_MULTIPLIER = 1.0 # Used in DETR
+    _C.SOLVER.CUSTOM_MULTIPLIER_NAME = [] # Used in DETR
+
+    # Deformable DETR
+    _C.MODEL.DETR = CN()
+    _C.MODEL.DETR.NUM
