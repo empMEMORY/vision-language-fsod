@@ -60,4 +60,17 @@ def add_detic_config(cfg):
     _C.MODEL.SWIN.OUT_FEATURES = (1, 2, 3) # FPN stride 8 - 32
 
     _C.MODEL.TIMM = CN()
-    _C.MODEL.TIMM.BASE_N
+    _C.MODEL.TIMM.BASE_NAME = 'resnet50'
+    _C.MODEL.TIMM.OUT_LEVELS = (3, 4, 5)
+    _C.MODEL.TIMM.NORM = 'FrozenBN'
+    _C.MODEL.TIMM.FREEZE_AT = 0
+    _C.MODEL.TIMM.PRETRAINED = False
+    _C.MODEL.DATASET_LOSS_WEIGHT = []
+    
+    # Multi-dataset dataloader
+    _C.DATALOADER.DATASET_RATIO = [1, 1] # sample ratio
+    _C.DATALOADER.USE_RFS = [False, False]
+    _C.DATALOADER.MULTI_DATASET_GROUPING = False # Always true when multi-dataset is enabled
+    _C.DATALOADER.DATASET_ANN = ['box', 'box'] # Annotation type of each dataset
+    _C.DATALOADER.USE_DIFF_BS_SIZE = False # Use different batchsize for each dataset
+    _C.DAT
