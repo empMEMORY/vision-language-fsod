@@ -110,4 +110,23 @@ def add_detic_config(cfg):
     _C.MODEL.DETR.DIM_FEEDFORWARD = 2048
     _C.MODEL.DETR.ENC_LAYERS = 6
     _C.MODEL.DETR.DEC_LAYERS = 6
-    _C.MODEL.DETR.PRE_NORM = F
+    _C.MODEL.DETR.PRE_NORM = False
+    _C.MODEL.DETR.HIDDEN_DIM = 256
+    _C.MODEL.DETR.NUM_OBJECT_QUERIES = 100
+
+    _C.MODEL.DETR.USE_FED_LOSS = False
+    _C.MODEL.DETR.WEAK_WEIGHT = 0.1
+
+    _C.INPUT.CUSTOM_AUG = ''
+    _C.INPUT.TRAIN_SIZE = 640
+    _C.INPUT.TEST_SIZE = 640
+    _C.INPUT.SCALE_RANGE = (0.1, 2.)
+    # 'default' for fixed short/ long edge, 'square' for max size=INPUT.SIZE
+    _C.INPUT.TEST_INPUT_TYPE = 'default' 
+
+    _C.FIND_UNUSED_PARAM = True
+    _C.EVAL_PRED_AR = False
+    _C.EVAL_PROPOSAL_AR = False
+    _C.EVAL_CAT_SPEC_AR = False
+    _C.IS_DEBUG = False
+    _C.QUICK_DEBUG = Fals
