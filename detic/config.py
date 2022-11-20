@@ -129,4 +129,8 @@ def add_detic_config(cfg):
     _C.EVAL_PROPOSAL_AR = False
     _C.EVAL_CAT_SPEC_AR = False
     _C.IS_DEBUG = False
-    _C.QUICK_DEBUG = Fals
+    _C.QUICK_DEBUG = False
+    _C.FP16 = False
+    _C.EVAL_AP_FIX = False
+    _C.GEN_PSEDO_LABELS = False
+    _C.SAVE_DEBUG_PATH = 'output/save_debug/'
