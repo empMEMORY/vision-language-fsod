@@ -32,4 +32,11 @@ def build_custom_optimizer(cfg: CfgNode, model: torch.nn.Module) -> torch.optim.
             continue
         if cfg.SOLVER.FREEZE_BACKBONE:
             if 'backbone' in key:
-    
+                value.requires_grad = False          # explicitly set requires grad as False to save memory, skipping this would just use more memory   
+                continue                   # skip param if it is of the backbone
+        
+        if cfg.MODEL.RESET_CLS_TRAIN:   # probably redundant because reset_cls_train actually makes it such that zs_weight doesn't show up in named_parameters
+            if 'zs' in key:
+                value.requires_grad = False          # explicitly set requires grad as False to save memory, skipping this would just use more memory   
+                continue
+       
