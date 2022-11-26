@@ -39,4 +39,20 @@ def build_custom_optimizer(cfg: CfgNode, model: torch.nn.Module) -> torch.optim.
             if 'zs' in key:
                 value.requires_grad = False          # explicitly set requires grad as False to save memory, skipping this would just use more memory   
                 continue
-       
+        
+        if cfg.SOLVER.FINETUNE_MODEL_KEYWORDS is not None:
+            finetune_flag=0
+            for keyword in cfg.SOLVER.FINETUNE_MODEL_KEYWORDS:
+                if keyword in key:
+                    finetune_flag=1
+            if finetune_flag==0:
+                value.requires_grad = False
+                continue
+            if finetune_flag==1:
+                print('Key to be finetuned', key)
+
+        memo.add(value)
+        lr = cfg.SOLVER.BASE_LR
+        weight_decay = cfg.SOLVER.WEIGHT_DECAY
+        if "backbone" in key:
+            lr = lr * cfg.
