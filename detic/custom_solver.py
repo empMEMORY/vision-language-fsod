@@ -69,4 +69,19 @@ def build_custom_optimizer(cfg: CfgNode, model: torch.nn.Module) -> torch.optim.
         clip_norm_val = cfg.SOLVER.CLIP_GRADIENTS.CLIP_VALUE
         enable = (
             cfg.SOLVER.CLIP_GRADIENTS.ENABLED
-         
+            and cfg.SOLVER.CLIP_GRADIENTS.CLIP_TYPE == "full_model"
+            and clip_norm_val > 0.0
+        )
+
+        class FullModelGradientClippingOptimizer(optim):
+            def step(self, closure=None):
+                all_params = itertools.chain(*[x["params"] for x in self.param_groups])
+                torch.nn.utils.clip_grad_norm_(all_params, clip_norm_val)
+                super().step(closure=closure)
+
+        return FullModelGradientClippingOptimizer if enable else optim
+
+    
+    if optimizer_type == 'SGD':
+        optimizer = maybe_add_full_model_gradient_clipping(torch.optim.SGD)(
+   
