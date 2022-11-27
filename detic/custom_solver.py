@@ -55,4 +55,18 @@ def build_custom_optimizer(cfg: CfgNode, model: torch.nn.Module) -> torch.optim.
         lr = cfg.SOLVER.BASE_LR
         weight_decay = cfg.SOLVER.WEIGHT_DECAY
         if "backbone" in key:
-            lr = lr * cfg.
+            lr = lr * cfg.SOLVER.BACKBONE_MULTIPLIER
+        if match_name_keywords(key, custom_multiplier_name):
+            lr = lr * cfg.SOLVER.CUSTOM_MULTIPLIER
+            print('Costum LR', key, lr)
+        param = {"params": [value], "lr": lr}
+        if optimizer_type != 'ADAMW':
+            param['weight_decay'] = weight_decay
+        params += [param]
+
+    def maybe_add_full_model_gradient_clipping(optim):  # optim: the optimizer class
+        # detectron2 doesn't have full model gradient clipping now
+        clip_norm_val = cfg.SOLVER.CLIP_GRADIENTS.CLIP_VALUE
+        enable = (
+            cfg.SOLVER.CLIP_GRADIENTS.ENABLED
+         
