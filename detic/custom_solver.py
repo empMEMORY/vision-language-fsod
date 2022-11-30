@@ -84,4 +84,16 @@ def build_custom_optimizer(cfg: CfgNode, model: torch.nn.Module) -> torch.optim.
     
     if optimizer_type == 'SGD':
         optimizer = maybe_add_full_model_gradient_clipping(torch.optim.SGD)(
-   
+            params, cfg.SOLVER.BASE_LR, momentum=cfg.SOLVER.MOMENTUM, 
+            nesterov=cfg.SOLVER.NESTEROV
+        )
+    elif optimizer_type == 'ADAMW':
+        optimizer = maybe_add_full_model_gradient_clipping(torch.optim.AdamW)(
+            params, cfg.SOLVER.BASE_LR, 
+            weight_decay=cfg.SOLVER.WEIGHT_DECAY
+        )
+    else:
+        raise NotImplementedError(f"no optimizer type {optimizer_type}")
+    if not cfg.SOLVER.CLIP_GRADIENTS.CLIP_TYPE == "full_model":
+        optimizer = maybe_add_gradient_clipping(cfg, optimizer)
+    return optimizer
