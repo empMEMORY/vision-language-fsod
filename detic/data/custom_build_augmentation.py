@@ -31,4 +31,21 @@ def build_custom_augmentation(cfg, is_train, scale=None, size=None, \
         augmentation = [T.ResizeShortestEdge(min_size, max_size, sample_style)]
     elif cfg.INPUT.CUSTOM_AUG == 'EfficientDetResizeCrop':
         if is_train:
-            scale = cfg.INPUT.SCALE_RANGE 
+            scale = cfg.INPUT.SCALE_RANGE if scale is None else scale
+            size = cfg.INPUT.TRAIN_SIZE if size is None else size
+        else:
+            scale = (1, 1)
+            size = cfg.INPUT.TEST_SIZE
+        augmentation = [EfficientDetResizeCrop(size, scale)]
+    else:
+        assert 0, cfg.INPUT.CUSTOM_AUG
+
+    # if is_train:
+    #     augmentation.append(T.RandomFlip())
+    return augmentation
+
+
+build_custom_transform_gen = build_custom_augmentation
+"""
+Alias for backward-compatibility.
+"""
