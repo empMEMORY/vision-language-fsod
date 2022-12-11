@@ -29,4 +29,15 @@ from collections import defaultdict
 from typing import Optional
 
 
-def _custom_train_lo
+def _custom_train_loader_from_config(cfg, mapper=None, *, dataset=None, sampler=None):
+    sampler_name = cfg.DATALOADER.SAMPLER_TRAIN
+    if 'MultiDataset' in sampler_name:
+        dataset_dicts = get_detection_dataset_dicts_with_source(
+            cfg.DATASETS.TRAIN,
+            filter_empty=cfg.DATALOADER.FILTER_EMPTY_ANNOTATIONS,
+            min_keypoints=cfg.MODEL.ROI_KEYPOINT_HEAD.MIN_KEYPOINTS_PER_IMAGE
+            if cfg.MODEL.KEYPOINT_ON else 0,
+            proposal_files=cfg.DATASETS.PROPOSAL_FILES_TRAIN if cfg.MODEL.LOAD_PROPOSALS else None,
+        )
+    else:
+        dataset_dicts = get_
