@@ -56,4 +56,16 @@ def _custom_train_loader_from_config(cfg, mapper=None, *, dataset=None, sampler=
     elif sampler_name == "TrainingSampler":
         sampler = TrainingSampler(len(dataset))
     elif sampler_name == "MultiDatasetSampler":
-       
+        sampler = MultiDatasetSampler(
+            dataset_dicts,
+            dataset_ratio = cfg.DATALOADER.DATASET_RATIO,
+            use_rfs = cfg.DATALOADER.USE_RFS,
+            dataset_ann = cfg.DATALOADER.DATASET_ANN,
+            repeat_threshold = cfg.DATALOADER.REPEAT_THRESHOLD,
+        )
+    elif sampler_name == "RepeatFactorTrainingSampler":
+        repeat_factors = RepeatFactorTrainingSampler.repeat_factors_from_category_frequency(
+            dataset_dicts, cfg.DATALOADER.REPEAT_THRESHOLD
+        )
+        sampler = RepeatFactorTrainingSampler(repeat_factors)
+    
