@@ -68,4 +68,21 @@ def _custom_train_loader_from_config(cfg, mapper=None, *, dataset=None, sampler=
             dataset_dicts, cfg.DATALOADER.REPEAT_THRESHOLD
         )
         sampler = RepeatFactorTrainingSampler(repeat_factors)
-    
+    else:
+        raise ValueError("Unknown training sampler: {}".format(sampler_name))
+
+    return {
+        "dataset": dataset_dicts,
+        "sampler": sampler,
+        "mapper": mapper,
+        "total_batch_size": cfg.SOLVER.IMS_PER_BATCH,
+        "aspect_ratio_grouping": cfg.DATALOADER.ASPECT_RATIO_GROUPING,
+        "num_workers": cfg.DATALOADER.NUM_WORKERS,
+        'multi_dataset_grouping': cfg.DATALOADER.MULTI_DATASET_GROUPING,
+        'use_diff_bs_size': cfg.DATALOADER.USE_DIFF_BS_SIZE,
+        'dataset_bs': cfg.DATALOADER.DATASET_BS,
+        'num_datasets': len(cfg.DATASETS.TRAIN)
+    }
+
+
+@configu
