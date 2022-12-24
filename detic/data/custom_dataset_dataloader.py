@@ -121,4 +121,23 @@ def build_custom_train_loader(
         return build_batch_data_loader(
             dataset,
             sampler,
-            
+            total_batch_size,
+            aspect_ratio_grouping=aspect_ratio_grouping,
+            num_workers=num_workers,
+        )
+
+
+def build_multi_dataset_batch_data_loader(
+    use_diff_bs_size, dataset_bs,
+    dataset, sampler, total_batch_size, num_datasets, num_workers=0
+):
+    """
+    """
+    world_size = get_world_size()
+    assert (
+        total_batch_size > 0 and total_batch_size % world_size == 0
+    ), "Total batch size ({}) must be divisible by the number of gpus ({}).".format(
+        total_batch_size, world_size
+    )
+
+    batch_size =
