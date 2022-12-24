@@ -85,4 +85,21 @@ def _custom_train_loader_from_config(cfg, mapper=None, *, dataset=None, sampler=
     }
 
 
-@configu
+@configurable(from_config=_custom_train_loader_from_config)
+def build_custom_train_loader(
+        dataset, *, mapper, sampler, 
+        total_batch_size=16,
+        aspect_ratio_grouping=True, 
+        num_workers=0,
+        num_datasets=1,
+        multi_dataset_grouping=False,
+        use_diff_bs_size=False,
+        dataset_bs=[]
+    ):
+    """
+    Modified from detectron2.data.build.build_custom_train_loader, but supports
+    different samplers
+    """
+    if isinstance(dataset, list):
+        dataset = DatasetFromList(dataset, copy=False)
+    
