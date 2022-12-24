@@ -102,4 +102,23 @@ def build_custom_train_loader(
     """
     if isinstance(dataset, list):
         dataset = DatasetFromList(dataset, copy=False)
-    
+    if mapper is not None:
+        dataset = MapDataset(dataset, mapper)
+    if sampler is None:
+        sampler = TrainingSampler(len(dataset))
+    assert isinstance(sampler, torch.utils.data.sampler.Sampler)
+    if multi_dataset_grouping:
+        return build_multi_dataset_batch_data_loader(
+            use_diff_bs_size,
+            dataset_bs,
+            dataset,
+            sampler,
+            total_batch_size,
+            num_datasets=num_datasets,
+            num_workers=num_workers,
+        )
+    else:
+        return build_batch_data_loader(
+            dataset,
+            sampler,
+            
