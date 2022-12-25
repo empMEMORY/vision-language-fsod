@@ -185,4 +185,24 @@ def get_detection_dataset_dicts_with_source(
 
     has_instances = "annotations" in dataset_dicts[0]
     if filter_empty and has_instances:
-        dataset_dicts = fil
+        dataset_dicts = filter_images_with_only_crowd_annotations(dataset_dicts)
+    if min_keypoints > 0 and has_instances:
+        dataset_dicts = filter_images_with_few_keypoints(dataset_dicts, min_keypoints)
+
+    return dataset_dicts
+
+
+class MultiDatasetSampler(Sampler):
+    def __init__(
+        self, 
+        dataset_dicts, 
+        dataset_ratio,
+        use_rfs,
+        dataset_ann,
+        repeat_threshold=0.001,
+        seed: Optional[int] = None,
+        ):
+        """
+        """
+        sizes = [0 for _ in range(len(dataset_ratio))]
+        for d in datas
