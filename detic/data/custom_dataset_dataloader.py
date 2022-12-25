@@ -169,4 +169,20 @@ def get_detection_dataset_dicts_with_source(
         enumerate(zip(dataset_names, dataset_dicts)):
         assert len(dicts), "Dataset '{}' is empty!".format(dataset_name)
         for d in dicts:
-            d['dataset_source'] = source_
+            d['dataset_source'] = source_id
+
+        if "annotations" in dicts[0]:
+            try:
+                class_names = MetadataCatalog.get(dataset_name).thing_classes
+                check_metadata_consistency("thing_classes", dataset_name)
+                print_instances_class_histogram(dicts, class_names)
+            except AttributeError:  # class names are not available for this dataset
+                pass
+
+    assert proposal_files is None
+
+    dataset_dicts = list(itertools.chain.from_iterable(dataset_dicts))
+
+    has_instances = "annotations" in dataset_dicts[0]
+    if filter_empty and has_instances:
+        dataset_dicts = fil
