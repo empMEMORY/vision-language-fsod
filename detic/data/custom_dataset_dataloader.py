@@ -158,4 +158,15 @@ def build_multi_dataset_batch_data_loader(
 
 
 def get_detection_dataset_dicts_with_source(
-    dataset_names, f
+    dataset_names, filter_empty=True, min_keypoints=0, proposal_files=None
+):
+    assert len(dataset_names)
+    dataset_dicts = [DatasetCatalog.get(dataset_name) for dataset_name in dataset_names]
+    for dataset_name, dicts in zip(dataset_names, dataset_dicts):
+        assert len(dicts), "Dataset '{}' is empty!".format(dataset_name)
+    
+    for source_id, (dataset_name, dicts) in \
+        enumerate(zip(dataset_names, dataset_dicts)):
+        assert len(dicts), "Dataset '{}' is empty!".format(dataset_name)
+        for d in dicts:
+            d['dataset_source'] = source_
