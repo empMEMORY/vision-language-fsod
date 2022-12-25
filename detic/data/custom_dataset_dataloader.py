@@ -140,4 +140,22 @@ def build_multi_dataset_batch_data_loader(
         total_batch_size, world_size
     )
 
-    batch_size =
+    batch_size = total_batch_size // world_size
+    data_loader = torch.utils.data.DataLoader(
+        dataset,
+        sampler=sampler,
+        num_workers=num_workers,
+        batch_sampler=None,
+        collate_fn=operator.itemgetter(0),  # don't batch, but yield individual elements
+        worker_init_fn=worker_init_reset_seed,
+    )  # yield individual mapped dict
+    if use_diff_bs_size:
+        return DIFFMDAspectRatioGroupedDataset(
+            data_loader, dataset_bs, num_datasets)
+    else:
+        return MDAspectRatioGroupedDataset(
+            data_loader, batch_size, num_datasets)
+
+
+def get_detection_dataset_dicts_with_source(
+    dataset_names, f
