@@ -205,4 +205,19 @@ class MultiDatasetSampler(Sampler):
         """
         """
         sizes = [0 for _ in range(len(dataset_ratio))]
-        for d in datas
+        for d in dataset_dicts:
+            sizes[d['dataset_source']] += 1
+        print('dataset sizes', sizes)
+        self.sizes = sizes
+        assert len(dataset_ratio) == len(sizes), \
+            'length of dataset ratio {} should be equal to number if dataset {}'.format(
+                len(dataset_ratio), len(sizes)
+            )
+        if seed is None:
+            seed = comm.shared_random_seed()
+        self._seed = int(seed)
+        self._rank = comm.get_rank()
+        self._world_size = comm.get_world_size()
+        
+        self.dataset_ids =  torch.tensor(
+            [d['dataset_source'] for d in da
