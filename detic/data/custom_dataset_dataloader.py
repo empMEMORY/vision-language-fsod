@@ -220,4 +220,18 @@ class MultiDatasetSampler(Sampler):
         self._world_size = comm.get_world_size()
         
         self.dataset_ids =  torch.tensor(
-            [d['dataset_source'] for d in da
+            [d['dataset_source'] for d in dataset_dicts], dtype=torch.long)
+
+        dataset_weight = [torch.ones(s) * max(sizes) / s * r / sum(dataset_ratio) \
+            for i, (r, s) in enumerate(zip(dataset_ratio, sizes))]
+        dataset_weight = torch.cat(dataset_weight)
+        
+        rfs_factors = []
+        st = 0
+        for i, s in enumerate(sizes):
+            if use_rfs[i]:
+                if dataset_ann[i] == 'box':
+                    rfs_func = RepeatFactorTrainingSampler.repeat_factors_from_category_frequency
+                else:
+                    rfs_func = repeat_factors_from_tag_frequency
+                rfs_fa
