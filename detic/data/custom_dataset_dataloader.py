@@ -234,4 +234,23 @@ class MultiDatasetSampler(Sampler):
                     rfs_func = RepeatFactorTrainingSampler.repeat_factors_from_category_frequency
                 else:
                     rfs_func = repeat_factors_from_tag_frequency
-                rfs_fa
+                rfs_factor = rfs_func(
+                    dataset_dicts[st: st + s],
+                    repeat_thresh=repeat_threshold)
+                rfs_factor = rfs_factor * (s / rfs_factor.sum())
+            else:
+                rfs_factor = torch.ones(s)
+            rfs_factors.append(rfs_factor)
+            st = st + s
+        rfs_factors = torch.cat(rfs_factors)
+
+        self.weights = dataset_weight * rfs_factors
+        self.sample_epoch_size = len(self.weights)
+
+    def __iter__(self):
+        start = self._rank
+        yield from itertools.islice(
+            self._infinite_indices(), start, None, self._world_size)
+
+
+    def 
