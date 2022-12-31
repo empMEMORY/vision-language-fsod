@@ -253,4 +253,21 @@ class MultiDatasetSampler(Sampler):
             self._infinite_indices(), start, None, self._world_size)
 
 
-    def 
+    def _infinite_indices(self):
+        g = torch.Generator()
+        g.manual_seed(self._seed)
+        while True:
+            ids = torch.multinomial(
+                self.weights, self.sample_epoch_size, generator=g, 
+                replacement=True)
+            nums = [(self.dataset_ids[ids] == i).sum().int().item() \
+                for i in range(len(self.sizes))]
+            yield from ids
+
+
+class MDAspectRatioGroupedDataset(torch.utils.data.IterableDataset):
+    def __init__(self, dataset, batch_size, num_datasets):
+        """
+        """
+        self.dataset = dataset
+        self.bat
