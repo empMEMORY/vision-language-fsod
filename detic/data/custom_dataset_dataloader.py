@@ -270,4 +270,20 @@ class MDAspectRatioGroupedDataset(torch.utils.data.IterableDataset):
         """
         """
         self.dataset = dataset
-        self.bat
+        self.batch_size = batch_size
+        self._buckets = [[] for _ in range(2 * num_datasets)]
+
+    def __iter__(self):
+        for d in self.dataset:
+            w, h = d["width"], d["height"]
+            aspect_ratio_bucket_id = 0 if w > h else 1
+            bucket_id = d['dataset_source'] * 2 + aspect_ratio_bucket_id
+            bucket = self._buckets[bucket_id]
+            bucket.append(d)
+            if len(bucket) == self.batch_size:
+                yield bucket[:]
+                del bucket[:]
+
+
+class DIFFMDAspectRatioGroupedDataset(torch.utils.data.IterableDataset):
+    def __init__(self, dataset, batch_sizes
