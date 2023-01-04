@@ -302,3 +302,25 @@ class DIFFMDAspectRatioGroupedDataset(torch.utils.data.IterableDataset):
             bucket.append(d)
             if len(bucket) == self.batch_sizes[d['dataset_source']]:
                 yield bucket[:]
+                del bucket[:]
+
+
+def repeat_factors_from_tag_frequency(dataset_dicts, repeat_thresh):
+    """
+    """
+    category_freq = defaultdict(int)
+    for dataset_dict in dataset_dicts:
+        cat_ids = dataset_dict['pos_category_ids']
+        for cat_id in cat_ids:
+            category_freq[cat_id] += 1
+    num_images = len(dataset_dicts)
+    for k, v in category_freq.items():
+        category_freq[k] = v / num_images
+
+    category_rep = {
+        cat_id: max(1.0, math.sqrt(repeat_thresh / cat_freq))
+        for cat_id, cat_freq in category_freq.items()
+    }
+
+    rep_factors = []
+  
