@@ -97,4 +97,19 @@ _PREDEFINED_SPLITS_COCO = {
     "coco_zeroshot_val": ("coco/val2017", "coco/zero-shot/instances_val2017_unseen_2.json", 'unseen'),
     "coco_not_zeroshot_val": ("coco/val2017", "coco/zero-shot/instances_val2017_seen_2.json", 'seen'),
     "coco_generalized_zeroshot_val": ("coco/val2017", "coco/zero-shot/instances_val2017_all_2_oriorder.json", 'all'),
-    "coco_zeroshot_train_oriorder": ("coco/train2017", "coco/zero-shot/instances_train20
+    "coco_zeroshot_train_oriorder": ("coco/train2017", "coco/zero-shot/instances_train2017_seen_2_oriorder.json", 'all'),
+}
+
+for key, (image_root, json_file, cat) in _PREDEFINED_SPLITS_COCO.items():
+    register_coco_instances(
+        key,
+        _get_metadata(cat),
+        os.path.join("datasets", json_file) if "://" not in json_file else json_file,
+        os.path.join("datasets", image_root),
+    )
+
+_CUSTOM_SPLITS_COCO = {
+    "cc3m_coco_train_tags": ("cc3m/training/", "cc3m/coco_train_image_info_tags.json"),
+    "coco_caption_train_tags": ("coco/train2017/", "coco/annotations/captions_train2017_tags_allcaps.json"),}
+
+for key, (image_root, json_file) i
