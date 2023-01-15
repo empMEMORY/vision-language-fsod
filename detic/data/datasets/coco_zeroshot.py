@@ -51,4 +51,24 @@ categories_seen = [
     {'id': 80, 'name': 'toaster'},
     {'id': 82, 'name': 'refrigerator'},
     {'id': 84, 'name': 'book'},
-    {'id': 85, 
+    {'id': 85, 'name': 'clock'},
+    {'id': 86, 'name': 'vase'},
+    {'id': 90, 'name': 'toothbrush'},
+]
+
+categories_unseen = [
+    {'id': 5, 'name': 'airplane'},
+    {'id': 6, 'name': 'bus'},
+    {'id': 17, 'name': 'cat'},
+    {'id': 18, 'name': 'dog'},
+    {'id': 21, 'name': 'cow'},
+    {'id': 22, 'name': 'elephant'},
+    {'id': 28, 'name': 'umbrella'},
+    {'id': 32, 'name': 'tie'},
+    {'id': 36, 'name': 'snowboard'},
+    {'id': 41, 'name': 'skateboard'},
+    {'id': 47, 'name': 'cup'},
+    {'id': 49, 'name': 'knife'},
+    {'id': 61, 'name': 'cake'},
+    {'id': 63, 'name': 'couch'},
+ 
