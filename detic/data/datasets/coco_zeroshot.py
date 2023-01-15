@@ -71,4 +71,22 @@ categories_unseen = [
     {'id': 49, 'name': 'knife'},
     {'id': 61, 'name': 'cake'},
     {'id': 63, 'name': 'couch'},
- 
+    {'id': 76, 'name': 'keyboard'},
+    {'id': 81, 'name': 'sink'},
+    {'id': 87, 'name': 'scissors'},
+]
+
+def _get_metadata(cat):
+    if cat == 'all':
+        return _get_builtin_metadata('coco')
+    elif cat == 'seen':
+        id_to_name = {x['id']: x['name'] for x in categories_seen}
+    else:
+        assert cat == 'unseen'
+        id_to_name = {x['id']: x['name'] for x in categories_unseen}
+
+    thing_dataset_id_to_contiguous_id = {
+        x: i for i, x in enumerate(sorted(id_to_name))}
+    thing_classes = [id_to_name[k] for k in sorted(id_to_name)]
+    return {
+        "thing_dataset_id_to_contiguous_i
