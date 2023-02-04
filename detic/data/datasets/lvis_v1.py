@@ -86,4 +86,17 @@ def custom_load_lvis_json(json_file, image_root, dataset_name=None):
             record['pos_category_ids'] = [
                 catid2contid[x] for x in img_dict.get("pos_category_ids", [])]
         if 'captions' in img_dict:
-            recor
+            record['captions'] = img_dict['captions']
+        if 'caption_features' in img_dict:
+            record['caption_features'] = img_dict['caption_features']
+        image_id = record["image_id"] = img_dict["id"]
+
+        objs = []
+        for anno in anno_dict_list:
+            assert anno["image_id"] == image_id
+            if anno.get('iscrowd', 0) > 0:
+                continue
+            obj = {"bbox": anno["bbox"], "bbox_mode": BoxMode.XYWH_ABS}
+            obj["category_id"] = catid2contid[anno['category_id']] 
+            if 'segmentation' in anno:
+                segm =
