@@ -73,4 +73,17 @@ def custom_load_lvis_json(json_file, image_root, dataset_name=None):
             record["file_name"] = os.path.join(image_root, file_name)
         elif 'tar_index' in img_dict:
             record['tar_index'] = img_dict['tar_index']
-     
+        
+        record["height"] = img_dict["height"]
+        record["width"] = img_dict["width"]
+        record["not_exhaustive_category_ids"] = img_dict.get(
+            "not_exhaustive_category_ids", [])
+        record["neg_category_ids"] = img_dict.get("neg_category_ids", [])
+        # NOTE: modified by Xingyi: convert to 0-based
+        record["neg_category_ids"] = [
+            catid2contid[x] for x in record["neg_category_ids"]]
+        if 'pos_category_ids' in img_dict:
+            record['pos_category_ids'] = [
+                catid2contid[x] for x in img_dict.get("pos_category_ids", [])]
+        if 'captions' in img_dict:
+            recor
