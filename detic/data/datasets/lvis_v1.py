@@ -45,4 +45,19 @@ def custom_load_lvis_json(json_file, image_root, dataset_name=None):
         sorted(lvis_api.dataset['categories'], key=lambda x: x['id']))}
     if len(lvis_api.dataset['categories']) == 1203:
         for x in lvis_api.dataset['categories']:
-      
+            assert catid2contid[x['id']] == x['id'] - 1
+    img_ids = sorted(lvis_api.imgs.keys())
+    imgs = lvis_api.load_imgs(img_ids)
+    anns = [lvis_api.img_ann_map[img_id] for img_id in img_ids]
+
+    ann_ids = [ann["id"] for anns_per_image in anns for ann in anns_per_image]
+    assert len(set(ann_ids)) == len(ann_ids), \
+        "Annotation ids in '{}' are not unique".format(json_file)
+
+    imgs_anns = list(zip(imgs, anns))
+    logger.info("Loaded {} images in the LVIS v1 format from {}".format(
+        len(imgs_anns), json_file))
+
+    dataset_dicts = []
+
+    for (img_dict, anno_dict_list)
