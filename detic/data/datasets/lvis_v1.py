@@ -60,4 +60,17 @@ def custom_load_lvis_json(json_file, image_root, dataset_name=None):
 
     dataset_dicts = []
 
-    for (img_dict, anno_dict_list)
+    for (img_dict, anno_dict_list) in imgs_anns:
+        record = {}
+        if "file_name" in img_dict:
+            file_name = img_dict["file_name"]
+            if img_dict["file_name"].startswith("COCO"):
+                file_name = file_name[-16:]
+            record["file_name"] = os.path.join(image_root, file_name)
+        elif 'coco_url' in img_dict:
+            # e.g., http://images.cocodataset.org/train2017/000000391895.jpg
+            file_name = img_dict["coco_url"][30:]
+            record["file_name"] = os.path.join(image_root, file_name)
+        elif 'tar_index' in img_dict:
+            record['tar_index'] = img_dict['tar_index']
+     
