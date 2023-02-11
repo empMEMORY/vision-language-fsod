@@ -99,4 +99,15 @@ def custom_load_lvis_json(json_file, image_root, dataset_name=None):
             obj = {"bbox": anno["bbox"], "bbox_mode": BoxMode.XYWH_ABS}
             obj["category_id"] = catid2contid[anno['category_id']] 
             if 'segmentation' in anno:
-                segm =
+                segm = anno["segmentation"]
+                valid_segm = [poly for poly in segm \
+                    if len(poly) % 2 == 0 and len(poly) >= 6]
+                # assert len(segm) == len(
+                #     valid_segm
+                # ), "Annotation contains an invalid polygon with < 3 points"
+                if not len(segm) == len(valid_segm):
+                    print('Annotation contains an invalid polygon with < 3 points')
+                assert len(segm) > 0
+                obj["segmentation"] = segm
+            objs.append(obj)
+        record["annotatio
