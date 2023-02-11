@@ -110,4 +110,25 @@ def custom_load_lvis_json(json_file, image_root, dataset_name=None):
                 assert len(segm) > 0
                 obj["segmentation"] = segm
             objs.append(obj)
-        record["annotatio
+        record["annotations"] = objs
+        dataset_dicts.append(record)
+
+    return dataset_dicts
+
+_CUSTOM_SPLITS_LVIS = {
+    "lvis_v1_train+coco": ("coco/", "lvis/lvis_v1_train+coco_mask.json"),
+    "lvis_v1_train_norare": ("coco/", "lvis/lvis_v1_train_norare.json"),
+}
+
+
+for key, (image_root, json_file) in _CUSTOM_SPLITS_LVIS.items():
+    custom_register_lvis_instances(
+        key,
+        get_lvis_instances_meta(key),
+        os.path.join("datasets", json_file) if "://" not in json_file else json_file,
+        os.path.join("datasets", image_root),
+    )
+
+
+def get_lvis_22k_meta():
+    from .lvis_22k_categ
