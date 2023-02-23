@@ -32,4 +32,13 @@ categories = [
     {'id': 26, 'name': 'Cake', 'freebase_id': '/m/0fszt'},
     {'id': 27, 'name': 'Pen', 'freebase_id': '/m/0k1tl'},
     {'id': 28, 'name': 'Cannon', 'freebase_id': '/m/020kz'},
-    {'id': 29, 'name': 'Bread', '
+    {'id': 29, 'name': 'Bread', 'freebase_id': '/m/09728'},
+    {'id': 30, 'name': 'Tree', 'freebase_id': '/m/07j7r'},
+    {'id': 31, 'name': 'Shellfish', 'freebase_id': '/m/0fbdv'},
+    {'id': 32, 'name': 'Bed', 'freebase_id': '/m/03ssj5'},
+    {'id': 33, 'name': 'Hamster', 'freebase_id': '/m/03qrc'},
+    {'id': 34, 'name': 'Hat', 'freebase_id': '/m/02dl1y'},
+    {'id': 35, 'name': 'Toaster', 'freebase_id': '/m/01k6s3'},
+    {'id': 36, 'name': 'Sombrero', 'freebase_id': '/m/02jfl0'},
+    {'id': 37, 'name': 'Tiara', 'freebase_id': '/m/01krhy'},
+    {'id': 38, 'name': 'Bowl', 'freebase_id': '/m/
