@@ -50,4 +50,13 @@ categories = [
     {'id': 44, 'name': 'Building', 'freebase_id': '/m/0cgh4'},
     {'id': 45, 'name': 'Power plugs and sockets', 'freebase_id': '/m/03bbps'},
     {'id': 46, 'name': 'Blender', 'freebase_id': '/m/02pjr4'},
-    {'id': 47, 'name': 'Billiard table', 'freebase_id': '/m/04
+    {'id': 47, 'name': 'Billiard table', 'freebase_id': '/m/04p0qw'},
+    {'id': 48, 'name': 'Cutting board', 'freebase_id': '/m/02pdsw'},
+    {'id': 49, 'name': 'Bronze sculpture', 'freebase_id': '/m/01yx86'},
+    {'id': 50, 'name': 'Turtle', 'freebase_id': '/m/09dzg'},
+    {'id': 51, 'name': 'Broccoli', 'freebase_id': '/m/0hkxq'},
+    {'id': 52, 'name': 'Tiger', 'freebase_id': '/m/07dm6'},
+    {'id': 53, 'name': 'Mirror', 'freebase_id': '/m/054_l'},
+    {'id': 54, 'name': 'Bear', 'freebase_id': '/m/01dws'},
+    {'id': 55, 'name': 'Zucchini', 'freebase_id': '/m/027pcv'},
+    {'id': 56, 'name': 'Dress', 'freebase_id': '/m/01d40f'
