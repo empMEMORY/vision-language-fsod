@@ -59,4 +59,14 @@ categories = [
     {'id': 53, 'name': 'Mirror', 'freebase_id': '/m/054_l'},
     {'id': 54, 'name': 'Bear', 'freebase_id': '/m/01dws'},
     {'id': 55, 'name': 'Zucchini', 'freebase_id': '/m/027pcv'},
-    {'id': 56, 'name': 'Dress', 'freebase_id': '/m/01d40f'
+    {'id': 56, 'name': 'Dress', 'freebase_id': '/m/01d40f'},
+    {'id': 57, 'name': 'Volleyball', 'freebase_id': '/m/02rgn06'},
+    {'id': 58, 'name': 'Guitar', 'freebase_id': '/m/0342h'},
+    {'id': 59, 'name': 'Reptile', 'freebase_id': '/m/06bt6'},
+    {'id': 60, 'name': 'Golf cart', 'freebase_id': '/m/0323sq'},
+    {'id': 61, 'name': 'Tart', 'freebase_id': '/m/02zvsm'},
+    {'id': 62, 'name': 'Fedora', 'freebase_id': '/m/02fq_6'},
+    {'id': 63, 'name': 'Carnivore', 'freebase_id': '/m/01lrl'},
+    {'id': 64, 'name': 'Car', 'freebase_id': '/m/0k4j'},
+    {'id': 65, 'name': 'Lighthouse', 'freebase_id': '/m/04h7h'},
+    {'id': 66, 'name': 'Coff
