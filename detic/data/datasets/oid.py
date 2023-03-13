@@ -125,4 +125,14 @@ categories = [
     {'id': 119, 'name': 'Fireplace', 'freebase_id': '/m/03tw93'},
     {'id': 120, 'name': 'Lantern', 'freebase_id': '/m/01jfsr'},
     {'id': 121, 'name': 'Missile', 'freebase_id': '/m/04ylt'},
-    {'id': 122, 'name': 'Book', 'freebase_id': '/m/
+    {'id': 122, 'name': 'Book', 'freebase_id': '/m/0bt_c3'},
+    {'id': 123, 'name': 'Spoon', 'freebase_id': '/m/0cmx8'},
+    {'id': 124, 'name': 'Grapefruit', 'freebase_id': '/m/0hqkz'},
+    {'id': 125, 'name': 'Squirrel', 'freebase_id': '/m/071qp'},
+    {'id': 126, 'name': 'Orange', 'freebase_id': '/m/0cyhj_'},
+    {'id': 127, 'name': 'Coat', 'freebase_id': '/m/01xygc'},
+    {'id': 128, 'name': 'Punching bag', 'freebase_id': '/m/0420v5'},
+    {'id': 129, 'name': 'Zebra', 'freebase_id': '/m/0898b'},
+    {'id': 130, 'name': 'Billboard', 'freebase_id': '/m/01knjb'},
+    {'id': 131, 'name': 'Bicycle', 'freebase_id': '/m/0199g'},
+    {'id': 132, 'name': 'Door handle', 'fre
