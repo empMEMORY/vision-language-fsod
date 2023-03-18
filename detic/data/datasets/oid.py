@@ -145,4 +145,14 @@ categories = [
     {'id': 139, 'name': 'Weapon', 'freebase_id': '/m/083kb'},
     {'id': 140, 'name': 'Shotgun', 'freebase_id': '/m/06nrc'},
     {'id': 141, 'name': 'Glasses', 'freebase_id': '/m/0jyfg'},
-    {'id': 14
+    {'id': 142, 'name': 'Seahorse', 'freebase_id': '/m/0nybt'},
+    {'id': 143, 'name': 'Belt', 'freebase_id': '/m/0176mf'},
+    {'id': 144, 'name': 'Watercraft', 'freebase_id': '/m/01rzcn'},
+    {'id': 145, 'name': 'Window', 'freebase_id': '/m/0d4v4'},
+    {'id': 146, 'name': 'Giraffe', 'freebase_id': '/m/03bk1'},
+    {'id': 147, 'name': 'Lion', 'freebase_id': '/m/096mb'},
+    {'id': 148, 'name': 'Tire', 'freebase_id': '/m/0h9mv'},
+    {'id': 149, 'name': 'Vehicle', 'freebase_id': '/m/07yv9'},
+    {'id': 150, 'name': 'Canoe', 'freebase_id': '/m/0ph39'},
+    {'id': 151, 'name': 'Tie', 'freebase_id': '/m/01rkbr'},
+    {'id': 152, 'name': 'Shelf', 'freebase
