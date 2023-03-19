@@ -192,4 +192,14 @@ categories = [
     {'id': 186, 'name': 'Seat belt', 'freebase_id': '/m/0dkzw'},
     {'id': 187, 'name': 'Coffee cup', 'freebase_id': '/m/02p5f1q'},
     {'id': 188, 'name': 'Microwave oven', 'freebase_id': '/m/0fx9l'},
-    {'id': 189, 'name': 'Hot dog', 'freebase_id'
+    {'id': 189, 'name': 'Hot dog', 'freebase_id': '/m/01b9xk'},
+    {'id': 190, 'name': 'Countertop', 'freebase_id': '/m/0b3fp9'},
+    {'id': 191, 'name': 'Serving tray', 'freebase_id': '/m/0h8n27j'},
+    {'id': 192, 'name': 'Dog bed', 'freebase_id': '/m/0h8n6f9'},
+    {'id': 193, 'name': 'Beer', 'freebase_id': '/m/01599'},
+    {'id': 194, 'name': 'Sunglasses', 'freebase_id': '/m/017ftj'},
+    {'id': 195, 'name': 'Golf ball', 'freebase_id': '/m/044r5d'},
+    {'id': 196, 'name': 'Waffle', 'freebase_id': '/m/01dwsz'},
+    {'id': 197, 'name': 'Palm tree', 'freebase_id': '/m/0cdl1'},
+    {'id': 198, 'name': 'Trumpet', 'freebase_id': '/m/07gql'},
+   
