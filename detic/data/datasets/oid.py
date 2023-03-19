@@ -183,4 +183,13 @@ categories = [
     {'id': 177, 'name': 'Digital clock', 'freebase_id': '/m/06_72j'},
     {'id': 178, 'name': 'Sunflower', 'freebase_id': '/m/0ftb8'},
     {'id': 179, 'name': 'Leopard', 'freebase_id': '/m/0c29q'},
-    {'id': 180, 'name': 'Bell pepper', 'freebase_i
+    {'id': 180, 'name': 'Bell pepper', 'freebase_id': '/m/0jg57'},
+    {'id': 181, 'name': 'Harbor seal', 'freebase_id': '/m/02l8p9'},
+    {'id': 182, 'name': 'Snake', 'freebase_id': '/m/078jl'},
+    {'id': 183, 'name': 'Sewing machine', 'freebase_id': '/m/0llzx'},
+    {'id': 184, 'name': 'Goose', 'freebase_id': '/m/0dbvp'},
+    {'id': 185, 'name': 'Helicopter', 'freebase_id': '/m/09ct_'},
+    {'id': 186, 'name': 'Seat belt', 'freebase_id': '/m/0dkzw'},
+    {'id': 187, 'name': 'Coffee cup', 'freebase_id': '/m/02p5f1q'},
+    {'id': 188, 'name': 'Microwave oven', 'freebase_id': '/m/0fx9l'},
+    {'id': 189, 'name': 'Hot dog', 'freebase_id'
