@@ -211,4 +211,13 @@ categories = [
     {'id': 205, 'name': 'Pomegranate', 'freebase_id': '/m/0jwn_'},
     {'id': 206, 'name': 'Skirt', 'freebase_id': '/m/02wv6h6'},
     {'id': 207, 'name': 'Gas stove', 'freebase_id': '/m/02wv84t'},
-    {
+    {'id': 208, 'name': 'Cookie', 'freebase_id': '/m/021mn'},
+    {'id': 209, 'name': 'Cart', 'freebase_id': '/m/018p4k'},
+    {'id': 210, 'name': 'Raven', 'freebase_id': '/m/06j2d'},
+    {'id': 211, 'name': 'Egg', 'freebase_id': '/m/033cnk'},
+    {'id': 212, 'name': 'Burrito', 'freebase_id': '/m/01j3zr'},
+    {'id': 213, 'name': 'Goat', 'freebase_id': '/m/03fwl'},
+    {'id': 214, 'name': 'Kitchen knife', 'freebase_id': '/m/058qzx'},
+    {'id': 215, 'name': 'Skateboard', 'freebase_id': '/m/06_fw'},
+    {'id': 216, 'name': 'Salt and pepper shakers', 'freebase_id': '/m/02x8cch'},
+    {'id': 217
