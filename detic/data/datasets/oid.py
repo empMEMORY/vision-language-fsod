@@ -220,4 +220,12 @@ categories = [
     {'id': 214, 'name': 'Kitchen knife', 'freebase_id': '/m/058qzx'},
     {'id': 215, 'name': 'Skateboard', 'freebase_id': '/m/06_fw'},
     {'id': 216, 'name': 'Salt and pepper shakers', 'freebase_id': '/m/02x8cch'},
-    {'id': 217
+    {'id': 217, 'name': 'Lynx', 'freebase_id': '/m/04g2r'},
+    {'id': 218, 'name': 'Boot', 'freebase_id': '/m/01b638'},
+    {'id': 219, 'name': 'Platter', 'freebase_id': '/m/099ssp'},
+    {'id': 220, 'name': 'Ski', 'freebase_id': '/m/071p9'},
+    {'id': 221, 'name': 'Swimwear', 'freebase_id': '/m/01gkx_'},
+    {'id': 222, 'name': 'Swimming pool', 'freebase_id': '/m/0b_rs'},
+    {'id': 223, 'name': 'Drinking straw', 'freebase_id': '/m/03v5tg'},
+    {'id': 224, 'name': 'Wrench', 'freebase_id': '/m/01j5ks'},
+    {'id': 225, 'name': 'Drum', 'freebase_id': '/m/02
