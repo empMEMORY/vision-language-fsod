@@ -274,4 +274,13 @@ categories = [
     {'id': 268, 'name': 'Turkey', 'freebase_id': '/m/0jly1'},
     {'id': 269, 'name': 'High heels', 'freebase_id': '/m/06k2mb'},
     {'id': 270, 'name': 'Bust', 'freebase_id': '/m/04yqq2'},
-    {'id': 271, 'name': 'Elepha
+    {'id': 271, 'name': 'Elephant', 'freebase_id': '/m/0bwd_0j'},
+    {'id': 272, 'name': 'Scarf', 'freebase_id': '/m/02h19r'},
+    {'id': 273, 'name': 'Barrel', 'freebase_id': '/m/02zn6n'},
+    {'id': 274, 'name': 'Trombone', 'freebase_id': '/m/07c6l'},
+    {'id': 275, 'name': 'Pumpkin', 'freebase_id': '/m/05zsy'},
+    {'id': 276, 'name': 'Box', 'freebase_id': '/m/025dyy'},
+    {'id': 277, 'name': 'Tomato', 'freebase_id': '/m/07j87'},
+    {'id': 278, 'name': 'Frog', 'freebase_id': '/m/09ld4'},
+    {'id': 279, 'name': 'Bidet', 'freebase_id': '/m/01vbnl'},
+    {'id': 280, 'name': 'Human face', 'freebase_id': '/
