@@ -265,4 +265,13 @@ categories = [
     {'id': 259, 'name': 'Cat', 'freebase_id': '/m/01yrx'},
     {'id': 260, 'name': 'Rifle', 'freebase_id': '/m/06c54'},
     {'id': 261, 'name': 'Dumbbell', 'freebase_id': '/m/04h8sr'},
-    {'id': 262
+    {'id': 262, 'name': 'Mobile phone', 'freebase_id': '/m/050k8'},
+    {'id': 263, 'name': 'Taxi', 'freebase_id': '/m/0pg52'},
+    {'id': 264, 'name': 'Shower', 'freebase_id': '/m/02f9f_'},
+    {'id': 265, 'name': 'Pitcher', 'freebase_id': '/m/054fyh'},
+    {'id': 266, 'name': 'Lemon', 'freebase_id': '/m/09k_b'},
+    {'id': 267, 'name': 'Invertebrate', 'freebase_id': '/m/03xxp'},
+    {'id': 268, 'name': 'Turkey', 'freebase_id': '/m/0jly1'},
+    {'id': 269, 'name': 'High heels', 'freebase_id': '/m/06k2mb'},
+    {'id': 270, 'name': 'Bust', 'freebase_id': '/m/04yqq2'},
+    {'id': 271, 'name': 'Elepha
