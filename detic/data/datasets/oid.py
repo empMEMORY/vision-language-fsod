@@ -320,4 +320,13 @@ categories = [
     {'id': 314, 'name': 'Tick', 'freebase_id': '/m/0175cv'},
     {'id': 315, 'name': 'Airplane', 'freebase_id': '/m/0cmf2'},
     {'id': 316, 'name': 'Canary', 'freebase_id': '/m/0ccs93'},
-    {'
+    {'id': 317, 'name': 'Spatula', 'freebase_id': '/m/02d1br'},
+    {'id': 318, 'name': 'Watch', 'freebase_id': '/m/0gjkl'},
+    {'id': 319, 'name': 'Lily', 'freebase_id': '/m/0jqgx'},
+    {'id': 320, 'name': 'Kitchen appliance', 'freebase_id': '/m/0h99cwc'},
+    {'id': 321, 'name': 'Filing cabinet', 'freebase_id': '/m/047j0r'},
+    {'id': 322, 'name': 'Aircraft', 'freebase_id': '/m/0k5j'},
+    {'id': 323, 'name': 'Cake stand', 'freebase_id': '/m/0h8n6ft'},
+    {'id': 324, 'name': 'Candy', 'freebase_id': '/m/0gm28'},
+    {'id': 325, 'name': 'Sink', 'freebase_id': '/m/0130jx'},
+    {'id': 326, 'name': 'Mouse', 'freebase_id': '/m/04rmv
