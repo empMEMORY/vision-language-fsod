@@ -348,4 +348,13 @@ categories = [
     {'id': 342, 'name': 'Honeycomb', 'freebase_id': '/m/0fz0h'},
     {'id': 343, 'name': 'Doughnut', 'freebase_id': '/m/0jy4k'},
     {'id': 344, 'name': 'Chest of drawers', 'freebase_id': '/m/05kyg_'},
-    {'id': 345, 'name': 'Land vehic
+    {'id': 345, 'name': 'Land vehicle', 'freebase_id': '/m/01prls'},
+    {'id': 346, 'name': 'Bat', 'freebase_id': '/m/01h44'},
+    {'id': 347, 'name': 'Monkey', 'freebase_id': '/m/08pbxl'},
+    {'id': 348, 'name': 'Dagger', 'freebase_id': '/m/02gzp'},
+    {'id': 349, 'name': 'Tableware', 'freebase_id': '/m/04brg2'},
+    {'id': 350, 'name': 'Human foot', 'freebase_id': '/m/031n1'},
+    {'id': 351, 'name': 'Mug', 'freebase_id': '/m/02jvh9'},
+    {'id': 352, 'name': 'Alarm clock', 'freebase_id': '/m/046dlr'},
+    {'id': 353, 'name': 'Pressure cooker', 'freebase_id': '/m/0h8ntjv'},
+    {'id': 354, 'name': 'Human hand', 'freebase_id'
