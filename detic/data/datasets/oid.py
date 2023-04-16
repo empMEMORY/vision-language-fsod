@@ -385,4 +385,14 @@ categories = [
     {'id': 379, 'name': 'Cricket ball', 'freebase_id': '/m/02ctlc'},
     {'id': 380, 'name': 'Pineapple', 'freebase_id': '/m/0fp6w'},
     {'id': 381, 'name': 'Coconut', 'freebase_id': '/m/0djtd'},
-    {'id': 382, 'name': 'Doll', 'freebase_id': '/m/016
+    {'id': 382, 'name': 'Doll', 'freebase_id': '/m/0167gd'},
+    {'id': 383, 'name': 'Coffee table', 'freebase_id': '/m/078n6m'},
+    {'id': 384, 'name': 'Snowman', 'freebase_id': '/m/0152hh'},
+    {'id': 385, 'name': 'Lavender', 'freebase_id': '/m/04gth'},
+    {'id': 386, 'name': 'Shrimp', 'freebase_id': '/m/0ll1f78'},
+    {'id': 387, 'name': 'Maple', 'freebase_id': '/m/0cffdh'},
+    {'id': 388, 'name': 'Cowboy hat', 'freebase_id': '/m/025rp__'},
+    {'id': 389, 'name': 'Goggles', 'freebase_id': '/m/02_n6y'},
+    {'id': 390, 'name': 'Rugby ball', 'freebase_id': '/m/0wdt60w'},
+    {'id': 391, 'name': 'Caterpillar', 'freebase_id': '/m/0cydv'},
+   
