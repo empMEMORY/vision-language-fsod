@@ -376,4 +376,13 @@ categories = [
     {'id': 370, 'name': 'Seafood', 'freebase_id': '/m/06nwz'},
     {'id': 371, 'name': 'Racket', 'freebase_id': '/m/0dv9c'},
     {'id': 372, 'name': 'Wheel', 'freebase_id': '/m/083wq'},
-    {'i
+    {'id': 373, 'name': 'Sea lion', 'freebase_id': '/m/0gd36'},
+    {'id': 374, 'name': 'Toy', 'freebase_id': '/m/0138tl'},
+    {'id': 375, 'name': 'Tea', 'freebase_id': '/m/07clx'},
+    {'id': 376, 'name': 'Tennis ball', 'freebase_id': '/m/05ctyq'},
+    {'id': 377, 'name': 'Waste container', 'freebase_id': '/m/0bjyj5'},
+    {'id': 378, 'name': 'Mule', 'freebase_id': '/m/0dbzx'},
+    {'id': 379, 'name': 'Cricket ball', 'freebase_id': '/m/02ctlc'},
+    {'id': 380, 'name': 'Pineapple', 'freebase_id': '/m/0fp6w'},
+    {'id': 381, 'name': 'Coconut', 'freebase_id': '/m/0djtd'},
+    {'id': 382, 'name': 'Doll', 'freebase_id': '/m/016
