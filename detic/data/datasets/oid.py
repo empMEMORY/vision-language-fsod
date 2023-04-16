@@ -367,4 +367,13 @@ categories = [
     {'id': 361, 'name': 'Girl', 'freebase_id': '/m/05r655'},
     {'id': 362, 'name': 'Roller skates', 'freebase_id': '/m/02p3w7d'},
     {'id': 363, 'name': 'Dinosaur', 'freebase_id': '/m/029tx'},
-    {'id': 364, 'name
+    {'id': 364, 'name': 'Porch', 'freebase_id': '/m/04m6gz'},
+    {'id': 365, 'name': 'Human beard', 'freebase_id': '/m/015h_t'},
+    {'id': 366, 'name': 'Submarine sandwich', 'freebase_id': '/m/06pcq'},
+    {'id': 367, 'name': 'Screwdriver', 'freebase_id': '/m/01bms0'},
+    {'id': 368, 'name': 'Strawberry', 'freebase_id': '/m/07fbm7'},
+    {'id': 369, 'name': 'Wine glass', 'freebase_id': '/m/09tvcd'},
+    {'id': 370, 'name': 'Seafood', 'freebase_id': '/m/06nwz'},
+    {'id': 371, 'name': 'Racket', 'freebase_id': '/m/0dv9c'},
+    {'id': 372, 'name': 'Wheel', 'freebase_id': '/m/083wq'},
+    {'i
