@@ -413,4 +413,13 @@ categories = [
     {'id': 407, 'name': 'Musical keyboard', 'freebase_id': '/m/057cc'},
     {'id': 408, 'name': 'Plumbing fixture', 'freebase_id': '/m/02pkr5'},
     {'id': 409, 'name': 'Scoreboard', 'freebase_id': '/m/057p5t'},
-    {'id'
+    {'id': 410, 'name': 'Baseball bat', 'freebase_id': '/m/03g8mr'},
+    {'id': 411, 'name': 'Envelope', 'freebase_id': '/m/0frqm'},
+    {'id': 412, 'name': 'Adhesive tape', 'freebase_id': '/m/03m3vtv'},
+    {'id': 413, 'name': 'Briefcase', 'freebase_id': '/m/0584n8'},
+    {'id': 414, 'name': 'Paddle', 'freebase_id': '/m/014y4n'},
+    {'id': 415, 'name': 'Bow and arrow', 'freebase_id': '/m/01g3x7'},
+    {'id': 416, 'name': 'Telephone', 'freebase_id': '/m/07cx4'},
+    {'id': 417, 'name': 'Sheep', 'freebase_id': '/m/07bgp'},
+    {'id': 418, 'name': 'Jacket', 'freebase_id': '/m/032b3c'},
+    {'id': 419
