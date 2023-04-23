@@ -451,4 +451,12 @@ categories = [
     {'id': 445, 'name': 'Oboe', 'freebase_id': '/m/05kms'},
     {'id': 446, 'name': 'Tin can', 'freebase_id': '/m/02jnhm'},
     {'id': 447, 'name': 'Mango', 'freebase_id': '/m/0fldg'},
-    {'id'
+    {'id': 448, 'name': 'Tripod', 'freebase_id': '/m/073bxn'},
+    {'id': 449, 'name': 'Oven', 'freebase_id': '/m/029bxz'},
+    {'id': 450, 'name': 'Mouse', 'freebase_id': '/m/020lf'},
+    {'id': 451, 'name': 'Barge', 'freebase_id': '/m/01btn'},
+    {'id': 452, 'name': 'Coffee', 'freebase_id': '/m/02vqfm'},
+    {'id': 453, 'name': 'Snowboard', 'freebase_id': '/m/06__v'},
+    {'id': 454, 'name': 'Common fig', 'freebase_id': '/m/043nyj'},
+    {'id': 455, 'name': 'Salad', 'freebase_id': '/m/0grw1'},
+    {'id': 456, 'name': 'Marine invertebrates', 
