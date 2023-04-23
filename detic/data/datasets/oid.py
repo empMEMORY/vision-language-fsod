@@ -431,4 +431,14 @@ categories = [
     {'id': 425, 'name': 'Bull', 'freebase_id': '/m/0cnyhnx'},
     {'id': 426, 'name': 'Camel', 'freebase_id': '/m/01x_v'},
     {'id': 427, 'name': 'Ball', 'freebase_id': '/m/018xm'},
-    {'id': 428, 'name': 'Duck', 'freebase_id'
+    {'id': 428, 'name': 'Duck', 'freebase_id': '/m/09ddx'},
+    {'id': 429, 'name': 'Whale', 'freebase_id': '/m/084zz'},
+    {'id': 430, 'name': 'Shirt', 'freebase_id': '/m/01n4qj'},
+    {'id': 431, 'name': 'Tank', 'freebase_id': '/m/07cmd'},
+    {'id': 432, 'name': 'Motorcycle', 'freebase_id': '/m/04_sv'},
+    {'id': 433, 'name': 'Accordion', 'freebase_id': '/m/0mkg'},
+    {'id': 434, 'name': 'Owl', 'freebase_id': '/m/09d5_'},
+    {'id': 435, 'name': 'Porcupine', 'freebase_id': '/m/0c568'},
+    {'id': 436, 'name': 'Sun hat', 'freebase_id': '/m/02wbtzl'},
+    {'id': 437, 'name': 'Nail', 'freebase_id': '/m/05bm6'},
+    {'id': 438, 'name
