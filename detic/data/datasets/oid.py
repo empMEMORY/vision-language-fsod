@@ -468,4 +468,13 @@ categories = [
     {'id': 462, 'name': 'Loveseat', 'freebase_id': '/m/0703r8'},
     {'id': 463, 'name': 'Suit', 'freebase_id': '/m/01xyhv'},
     {'id': 464, 'name': 'Teapot', 'freebase_id': '/m/01fh4r'},
-    {'id': 465, 'name': 'Bottle', 'freebase_i
+    {'id': 465, 'name': 'Bottle', 'freebase_id': '/m/04dr76w'},
+    {'id': 466, 'name': 'Alpaca', 'freebase_id': '/m/0pcr'},
+    {'id': 467, 'name': 'Kettle', 'freebase_id': '/m/03s_tn'},
+    {'id': 468, 'name': 'Trousers', 'freebase_id': '/m/07mhn'},
+    {'id': 469, 'name': 'Popcorn', 'freebase_id': '/m/01hrv5'},
+    {'id': 470, 'name': 'Centipede', 'freebase_id': '/m/019h78'},
+    {'id': 471, 'name': 'Spider', 'freebase_id': '/m/09kmb'},
+    {'id': 472, 'name': 'Sparrow', 'freebase_id': '/m/0h23m'},
+    {'id': 473, 'name': 'Plate', 'freebase_id': '/m/050gv4'},
+    {'id': 474, 'name': 'Bagel', 'free
