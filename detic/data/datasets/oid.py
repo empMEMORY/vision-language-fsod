@@ -477,4 +477,13 @@ categories = [
     {'id': 471, 'name': 'Spider', 'freebase_id': '/m/09kmb'},
     {'id': 472, 'name': 'Sparrow', 'freebase_id': '/m/0h23m'},
     {'id': 473, 'name': 'Plate', 'freebase_id': '/m/050gv4'},
-    {'id': 474, 'name': 'Bagel', 'free
+    {'id': 474, 'name': 'Bagel', 'freebase_id': '/m/01fb_0'},
+    {'id': 475, 'name': 'Personal care', 'freebase_id': '/m/02w3_ws'},
+    {'id': 476, 'name': 'Apple', 'freebase_id': '/m/014j1m'},
+    {'id': 477, 'name': 'Brassiere', 'freebase_id': '/m/01gmv2'},
+    {'id': 478, 'name': 'Bathroom cabinet', 'freebase_id': '/m/04y4h8h'},
+    {'id': 479, 'name': 'studio couch', 'freebase_id': '/m/026qbn5'},
+    {'id': 480, 'name': 'Computer keyboard', 'freebase_id': '/m/01m2v'},
+    {'id': 481, 'name': 'Table tennis racket', 'freebase_id': '/m/05_5p_0'},
+    {'id': 482, 'name': 'Sushi', 'freebase_id': '/m/07030'},
+  
