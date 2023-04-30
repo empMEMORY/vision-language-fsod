@@ -495,4 +495,17 @@ categories = [
     {'id': 489, 'name': 'Dog', 'freebase_id': '/m/0bt9lr'},
     {'id': 490, 'name': 'Jug', 'freebase_id': '/m/08hvt4'},
     {'id': 491, 'name': 'Wok', 'freebase_id': '/m/084rd'},
-    {'id': 492, 'name': 'Fire hydrant', 'freebase_id': '/m/01pns
+    {'id': 492, 'name': 'Fire hydrant', 'freebase_id': '/m/01pns0'},
+    {'id': 493, 'name': 'Human eye', 'freebase_id': '/m/014sv8'},
+    {'id': 494, 'name': 'Skyscraper', 'freebase_id': '/m/079cl'},
+    {'id': 495, 'name': 'Backpack', 'freebase_id': '/m/01940j'},
+    {'id': 496, 'name': 'Potato', 'freebase_id': '/m/05vtc'},
+    {'id': 497, 'name': 'Paper towel', 'freebase_id': '/m/02w3r3'},
+    {'id': 498, 'name': 'Lifejacket', 'freebase_id': '/m/054xkw'},
+    {'id': 499, 'name': 'Bicycle wheel', 'freebase_id': '/m/01bqk0'},
+    {'id': 500, 'name': 'Toilet', 'freebase_id': '/m/09g1w'},
+]
+
+
+def _get_builtin_metadata(cats):
+    id_to_name = {x['id']: x['name'] for x in c
