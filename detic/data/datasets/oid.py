@@ -508,4 +508,15 @@ categories = [
 
 
 def _get_builtin_metadata(cats):
-    id_to_name = {x['id']: x['name'] for x in c
+    id_to_name = {x['id']: x['name'] for x in cats}
+    thing_dataset_id_to_contiguous_id = {i + 1: i for i in range(len(cats))}
+    thing_classes = [x['name'] for x in sorted(cats, key=lambda x: x['id'])]
+    return {
+        "thing_dataset_id_to_contiguous_id": thing_dataset_id_to_contiguous_id,
+        "thing_classes": thing_classes}
+
+_PREDEFINED_SPLITS_OID = {
+    # cat threshold: 500, 1500: r 170, c 151, f 179
+    "oid_train": ("oid/images/", "oid/annotations/oid_challenge_2019_train_bbox.json"),
+    # "expanded" duplicates annotations to their father classes based on the official
+    #   hierarchy. This is used i
