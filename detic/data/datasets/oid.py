@@ -519,4 +519,16 @@ _PREDEFINED_SPLITS_OID = {
     # cat threshold: 500, 1500: r 170, c 151, f 179
     "oid_train": ("oid/images/", "oid/annotations/oid_challenge_2019_train_bbox.json"),
     # "expanded" duplicates annotations to their father classes based on the official
-    #   hierarchy. This is used i
+    #   hierarchy. This is used in the official evaulation protocol.
+    #   https://storage.googleapis.com/openimages/web/evaluation.html
+    "oid_val_expanded": ("oid/images/validation/", "oid/annotations/oid_challenge_2019_val_expanded.json"),
+    "oid_val_expanded_rare": ("oid/images/validation/", "oid/annotations/oid_challenge_2019_val_expanded_rare.json"),
+}
+
+
+for key, (image_root, json_file) in _PREDEFINED_SPLITS_OID.items():
+    register_oid_instances(
+        key,
+        _get_builtin_metadata(categories),
+        os.path.join("datasets", json_file) if "://" not in json_file else json_file,
+     
