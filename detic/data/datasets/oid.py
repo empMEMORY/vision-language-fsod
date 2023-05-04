@@ -531,4 +531,5 @@ for key, (image_root, json_file) in _PREDEFINED_SPLITS_OID.items():
         key,
         _get_builtin_metadata(categories),
         os.path.join("datasets", json_file) if "://" not in json_file else json_file,
-     
+        os.path.join("datasets", image_root),
+    )
