@@ -34,4 +34,25 @@ def register_oid_instances(name, metadata, json_file, image_root):
         json_file, image_root, name))
 
     # 2. Optionally, add metadata about this dataset,
-    # since they might be useful in evaluation, visualization
+    # since they might be useful in evaluation, visualization or logging
+    MetadataCatalog.get(name).set(
+        json_file=json_file, image_root=image_root, evaluator_type="oid", **metadata
+    )
+
+
+def load_coco_json_mem_efficient(json_file, image_root, dataset_name=None, extra_annotation_keys=None):
+    """
+    Actually not mem efficient
+    """
+    from pycocotools.coco import COCO
+
+    timer = Timer()
+    json_file = PathManager.get_local_path(json_file)
+    with contextlib.redirect_stdout(io.StringIO()):
+        coco_api = COCO(json_file)
+    if timer.seconds() > 1:
+        logger.info("Loading {} takes {:.2f} seconds.".format(json_file, timer.seconds()))
+
+    id_map = None
+    if dataset_name is not None:
+       
