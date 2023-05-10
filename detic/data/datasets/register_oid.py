@@ -55,4 +55,16 @@ def load_coco_json_mem_efficient(json_file, image_root, dataset_name=None, extra
 
     id_map = None
     if dataset_name is not None:
-       
+        meta = MetadataCatalog.get(dataset_name)
+        cat_ids = sorted(coco_api.getCatIds())
+        cats = coco_api.loadCats(cat_ids)
+        # The categories in a custom json file may not be sorted.
+        thing_classes = [c["name"] for c in sorted(cats, key=lambda x: x["id"])]
+        meta.thing_classes = thing_classes
+
+        if not (min(cat_ids) == 1 and max(cat_ids) == len(cat_ids)):
+            if "coco" not in dataset_name:
+                logger.warning(
+                    """
+                    Category ids in annotations are not in [1, #categories]! We'll apply a mapping for you.
+   
