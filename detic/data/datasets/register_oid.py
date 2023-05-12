@@ -67,4 +67,22 @@ def load_coco_json_mem_efficient(json_file, image_root, dataset_name=None, extra
                 logger.warning(
                     """
                     Category ids in annotations are not in [1, #categories]! We'll apply a mapping for you.
-   
+                    """
+                )
+        id_map = {v: i for i, v in enumerate(cat_ids)}
+        meta.thing_dataset_id_to_contiguous_id = id_map
+
+    # sort indices for reproducible results
+    img_ids = sorted(coco_api.imgs.keys())
+    imgs = coco_api.loadImgs(img_ids)
+    logger.info("Loaded {} images in COCO format from {}".format(len(imgs), json_file))
+
+    dataset_dicts = []
+
+    ann_keys = ["iscrowd", "bbox", "category_id"] + (extra_annotation_keys or [])
+
+    for img_dict in imgs:
+        record = {}
+        record["file_name"] = os.path.join(image_root, img_dict["file_name"])
+        record["height"] = img_dict["height"]
+        rec
