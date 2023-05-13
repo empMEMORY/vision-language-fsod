@@ -85,4 +85,20 @@ def load_coco_json_mem_efficient(json_file, image_root, dataset_name=None, extra
         record = {}
         record["file_name"] = os.path.join(image_root, img_dict["file_name"])
         record["height"] = img_dict["height"]
-        rec
+        record["width"] = img_dict["width"]
+        image_id = record["image_id"] = img_dict["id"]
+        anno_dict_list = coco_api.imgToAnns[image_id]
+        if 'neg_category_ids' in img_dict:
+            record['neg_category_ids'] = \
+                [id_map[x] for x in img_dict['neg_category_ids']]
+
+        objs = []
+        for anno in anno_dict_list:
+            assert anno["image_id"] == image_id
+
+            assert anno.get("ignore", 0) == 0
+
+            obj = {key: anno[key] for key in ann_keys if key in anno}
+
+            segm = anno.get("segmentation", None)
+            if segm:  # either list[lis
