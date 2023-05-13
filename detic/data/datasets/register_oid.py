@@ -101,4 +101,16 @@ def load_coco_json_mem_efficient(json_file, image_root, dataset_name=None, extra
             obj = {key: anno[key] for key in ann_keys if key in anno}
 
             segm = anno.get("segmentation", None)
-            if segm:  # either list[lis
+            if segm:  # either list[list[float]] or dict(RLE)
+                if not isinstance(segm, dict):
+                    # filter out invalid polygons (< 3 points)
+                    segm = [poly for poly in segm if len(poly) % 2 == 0 and len(poly) >= 6]
+                    if len(segm) == 0:
+                        num_instances_without_valid_segmentation += 1
+                        continue  # ignore this instance
+                obj["segmentation"] = segm
+
+            obj["bbox_mode"] = BoxMode.XYWH_ABS
+
+            if id_map:
+                obj["category_id"] = id_map[obj["category_id"]]
