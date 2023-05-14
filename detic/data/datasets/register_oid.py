@@ -114,3 +114,9 @@ def load_coco_json_mem_efficient(json_file, image_root, dataset_name=None, extra
 
             if id_map:
                 obj["category_id"] = id_map[obj["category_id"]]
+            objs.append(obj)
+        record["annotations"] = objs
+        dataset_dicts.append(record)
+    
+    del coco_api
+    return dataset_dicts
