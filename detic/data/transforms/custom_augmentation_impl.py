@@ -56,4 +56,5 @@ class EfficientDetResizeCrop(Augmentation):
         offset_x = scaled_w - self.target_size[1]
         offset_y = int(max(0.0, float(offset_y)) * np.random.uniform(0, 1))
         offset_x = int(max(0.0, float(offset_x)) * np.random.uniform(0, 1))
-        ret
+        return EfficientDetResizeCropTransform(
+            scaled_h, scaled_w, offset_y, offset_x, img_scale, self.target_size, self.interp)
