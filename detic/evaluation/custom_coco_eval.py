@@ -43,4 +43,16 @@ class CustomCOCOEvaluator(COCOEvaluator):
 
         # the standard metrics
         results = {
-    
+            metric: float(coco_eval.stats[idx] * 100 if coco_eval.stats[idx] >= 0 else "nan")
+            for idx, metric in enumerate(metrics)
+        }
+        self._logger.info(
+            "Evaluation results for {}: \n".format(iou_type) + create_small_table(results)
+        )
+        if not np.isfinite(sum(results.values())):
+            self._logger.info("Some metrics cannot be computed and is shown as NaN.")
+
+        if class_names is None or len(class_names) <= 1:
+            return results
+        # Compute per-category AP
+        # from https://github.com/facebookresearch/Detectron/blob/a6a835f5b8208c45d0dce217ce9bbda915f44d
