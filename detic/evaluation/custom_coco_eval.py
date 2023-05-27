@@ -26,4 +26,21 @@ from detectron2.utils.logger import create_small_table
 from ..data.datasets.coco_zeroshot import categories_seen, categories_unseen
 
 class CustomCOCOEvaluator(COCOEvaluator):
-    def _derive_coco_results(self, coco_
+    def _derive_coco_results(self, coco_eval, iou_type, class_names=None):
+        """
+        Additionally plot mAP for 'seen classes' and 'unseen classes'
+        """
+        
+        metrics = {
+            "bbox": ["AP", "AP50", "AP75", "APs", "APm", "APl"],
+            "segm": ["AP", "AP50", "AP75", "APs", "APm", "APl"],
+            "keypoints": ["AP", "AP50", "AP75", "APm", "APl"],
+        }[iou_type]
+
+        if coco_eval is None:
+            self._logger.warn("No predictions from the model!")
+            return {metric: float("nan") for metric in metrics}
+
+        # the standard metrics
+        results = {
+    
