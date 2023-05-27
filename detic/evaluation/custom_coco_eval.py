@@ -55,4 +55,16 @@ class CustomCOCOEvaluator(COCOEvaluator):
         if class_names is None or len(class_names) <= 1:
             return results
         # Compute per-category AP
-        # from https://github.com/facebookresearch/Detectron/blob/a6a835f5b8208c45d0dce217ce9bbda915f44d
+        # from https://github.com/facebookresearch/Detectron/blob/a6a835f5b8208c45d0dce217ce9bbda915f44df7/detectron/datasets/json_dataset_evaluator.py#L222-L252 # noqa
+        precisions = coco_eval.eval["precision"]
+        # precision has dims (iou, recall, cls, area range, max dets)
+        assert len(class_names) == precisions.shape[2]
+
+        seen_names = set([x['name'] for x in categories_seen])
+        unseen_names = set([x['name'] for x in categories_unseen])
+        results_per_category = []
+        results_per_category50 = []
+        results_per_category50_seen = []
+        results_per_category50_unseen = []
+        for idx, name in enumerate(class_names):
+            # area range index 0: a
