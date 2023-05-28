@@ -77,4 +77,17 @@ class CustomCOCOEvaluator(COCOEvaluator):
             precision50 = precision50[precision50 > -1]
             ap50 = np.mean(precision50) if precision50.size else float("nan")
             results_per_category50.append(("{}".format(name), float(ap50 * 100)))
-            if
+            if name in seen_names:
+                results_per_category50_seen.append(float(ap50 * 100))
+            if name in unseen_names:
+                results_per_category50_unseen.append(float(ap50 * 100))
+
+        # tabulate it
+        N_COLS = min(6, len(results_per_category) * 2)
+        results_flatten = list(itertools.chain(*results_per_category))
+        results_2d = itertools.zip_longest(*[results_flatten[i::N_COLS] for i in range(N_COLS)])
+        table = tabulate(
+            results_2d,
+            tablefmt="pipe",
+            floatfmt=".3f",
+            headers=["category", "AP"
