@@ -119,4 +119,6 @@ class CustomCOCOEvaluator(COCOEvaluator):
             ))
 
         results.update({"AP-" + name: ap for name, ap in results_per_category})
-        results["AP50-seen"] = sum(results_per_category50_seen) / len(results_
+        results["AP50-seen"] = sum(results_per_category50_seen) / len(results_per_category50_seen)
+        results["AP50-unseen"] = sum(results_per_category50_unseen) / len(results_per_category50_unseen)
+        return results
