@@ -67,4 +67,14 @@ class CustomCOCOEvaluator(COCOEvaluator):
         results_per_category50_seen = []
         results_per_category50_unseen = []
         for idx, name in enumerate(class_names):
-            # area range index 0: a
+            # area range index 0: all area ranges
+            # max dets index -1: typically 100 per image
+            precision = precisions[:, :, idx, 0, -1]
+            precision = precision[precision > -1]
+            ap = np.mean(precision) if precision.size else float("nan")
+            results_per_category.append(("{}".format(name), float(ap * 100)))
+            precision50 = precisions[0, :, idx, 0, -1]
+            precision50 = precision50[precision50 > -1]
+            ap50 = np.mean(precision50) if precision50.size else float("nan")
+            results_per_category50.append(("{}".format(name), float(ap50 * 100)))
+            if
