@@ -90,4 +90,20 @@ class CustomCOCOEvaluator(COCOEvaluator):
             results_2d,
             tablefmt="pipe",
             floatfmt=".3f",
-            headers=["category", "AP"
+            headers=["category", "AP"] * (N_COLS // 2),
+            numalign="left",
+        )
+        self._logger.info("Per-category {} AP: \n".format(iou_type) + table)
+
+
+        N_COLS = min(6, len(results_per_category50) * 2)
+        results_flatten = list(itertools.chain(*results_per_category50))
+        results_2d = itertools.zip_longest(*[results_flatten[i::N_COLS] for i in range(N_COLS)])
+        table = tabulate(
+            results_2d,
+            tablefmt="pipe",
+            floatfmt=".3f",
+            headers=["category", "AP50"] * (N_COLS // 2),
+            numalign="left",
+        )
+        self._logger.info("
