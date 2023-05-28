@@ -106,4 +106,17 @@ class CustomCOCOEvaluator(COCOEvaluator):
             headers=["category", "AP50"] * (N_COLS // 2),
             numalign="left",
         )
-        self._logger.info("
+        self._logger.info("Per-category {} AP50: \n".format(iou_type) + table)
+        self._logger.info(
+            "Seen {} AP50: {}".format(
+                iou_type,
+                sum(results_per_category50_seen) / len(results_per_category50_seen),
+            ))
+        self._logger.info(
+            "Unseen {} AP50: {}".format(
+                iou_type,
+                sum(results_per_category50_unseen) / len(results_per_category50_unseen),
+            ))
+
+        results.update({"AP-" + name: ap for name, ap in results_per_category})
+        results["AP50-seen"] = sum(results_per_category50_seen) / len(results_
