@@ -21,4 +21,20 @@ import torch
 from tabulate import tabulate
 
 # from lvis.lvis import LVIS
-#
+# from lvis.results import LVISResults
+from lvis import LVIS
+from lvis import LVISResults
+
+
+import pycocotools.mask as mask_utils
+
+from fvcore.common.file_io import PathManager
+import detectron2.utils.comm as comm
+from detectron2.data import MetadataCatalog
+from detectron2.evaluation.coco_evaluation import instances_to_coco_json
+from detectron2.utils.logger import create_small_table
+from detectron2.evaluation import DatasetEvaluator
+
+def compute_average_precision(precision, recall):
+  """Compute Average Precision according to the definition in VOCdevkit.
+  Precision is modified to ensure that 
