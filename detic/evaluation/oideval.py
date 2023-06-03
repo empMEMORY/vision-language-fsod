@@ -37,4 +37,22 @@ from detectron2.evaluation import DatasetEvaluator
 
 def compute_average_precision(precision, recall):
   """Compute Average Precision according to the definition in VOCdevkit.
-  Precision is modified to ensure that 
+  Precision is modified to ensure that it does not decrease as recall
+  decrease.
+  Args:
+    precision: A float [N, 1] numpy array of precisions
+    recall: A float [N, 1] numpy array of recalls
+  Raises:
+    ValueError: if the input is not of the correct format
+  Returns:
+    average_precison: The area under the precision recall curve. NaN if
+      precision and recall are None.
+  """
+  if precision is None:
+    if recall is not None:
+      raise ValueError("If precision is None, recall must also be None")
+    return np.NAN
+
+  if not isinstance(precision, np.ndarray) or not isinstance(
+      recall, np.ndarray):
+    raise ValueError("pr
