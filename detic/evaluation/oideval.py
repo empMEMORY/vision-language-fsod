@@ -82,4 +82,18 @@ def compute_average_precision(precision, recall):
 class OIDEval:
     def __init__(
         self, lvis_gt, lvis_dt, iou_type="bbox", expand_pred_label=False, 
-        oid_hierarchy_path='./datasets/oid/a
+        oid_hierarchy_path='./datasets/oid/annotations/challenge-2019-label500-hierarchy.json'):
+        """Constructor for OIDEval.
+        Args:
+            lvis_gt (LVIS class instance, or str containing path of annotation file)
+            lvis_dt (LVISResult class instance, or str containing path of result file,
+            or list of dict)
+            iou_type (str): segm or bbox evaluation
+        """
+        self.logger = logging.getLogger(__name__)
+
+        if iou_type not in ["bbox", "segm"]:
+            raise ValueError("iou_type: {} is not supported.".format(iou_type))
+
+        if isinstance(lvis_gt, LVIS):
+           
