@@ -96,4 +96,16 @@ class OIDEval:
             raise ValueError("iou_type: {} is not supported.".format(iou_type))
 
         if isinstance(lvis_gt, LVIS):
-           
+            self.lvis_gt = lvis_gt
+        elif isinstance(lvis_gt, str):
+            self.lvis_gt = LVIS(lvis_gt)
+        else:
+            raise TypeError("Unsupported type {} of lvis_gt.".format(lvis_gt))
+
+        if isinstance(lvis_dt, LVISResults):
+            self.lvis_dt = lvis_dt
+        elif isinstance(lvis_dt, (str, list)):
+            # self.lvis_dt = LVISResults(self.lvis_gt, lvis_dt, max_dets=-1)
+            self.lvis_dt = LVISResults(self.lvis_gt, lvis_dt)
+        else:
+            raise TypeError("Unsupported type {} of lvis_dt.".
