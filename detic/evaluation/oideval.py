@@ -108,4 +108,18 @@ class OIDEval:
             # self.lvis_dt = LVISResults(self.lvis_gt, lvis_dt, max_dets=-1)
             self.lvis_dt = LVISResults(self.lvis_gt, lvis_dt)
         else:
-            raise TypeError("Unsupported type {} of lvis_dt.".
+            raise TypeError("Unsupported type {} of lvis_dt.".format(lvis_dt))
+
+        if expand_pred_label:
+            oid_hierarchy = json.load(open(oid_hierarchy_path, 'r'))
+            cat_info = self.lvis_gt.dataset['categories']
+            freebase2id = {x['freebase_id']: x['id'] for x in cat_info}
+            id2freebase = {x['id']: x['freebase_id'] for x in cat_info}
+            id2name = {x['id']: x['name'] for x in cat_info}
+            
+            fas = defaultdict(set)
+            def dfs(hierarchy, cur_id):
+                all_childs = set()
+                all_keyed_child = {}
+                if 'Subcategory' in hierarchy:
+                 
