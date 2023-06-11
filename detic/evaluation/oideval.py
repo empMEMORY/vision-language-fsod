@@ -122,4 +122,19 @@ class OIDEval:
                 all_childs = set()
                 all_keyed_child = {}
                 if 'Subcategory' in hierarchy:
-                 
+                    for x in hierarchy['Subcategory']:
+                        childs = dfs(x, freebase2id[x['LabelName']])
+                        all_childs.update(childs)
+                if cur_id != -1:
+                    for c in all_childs:
+                        fas[c].add(cur_id)
+                all_childs.add(cur_id)
+                return all_childs
+            dfs(oid_hierarchy, -1)
+            
+            expanded_pred = []
+            id_count = 0
+            for d in self.lvis_dt.dataset['annotations']:
+                cur_id = d['category_id']
+                ids = [cur_id] + [x for x in fas[cur_id]]
+                for cat_id
