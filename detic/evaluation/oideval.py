@@ -137,4 +137,19 @@ class OIDEval:
             for d in self.lvis_dt.dataset['annotations']:
                 cur_id = d['category_id']
                 ids = [cur_id] + [x for x in fas[cur_id]]
-                for cat_id
+                for cat_id in ids:
+                    new_box = copy.deepcopy(d)
+                    id_count = id_count + 1
+                    new_box['id'] = id_count
+                    new_box['category_id'] = cat_id
+                    expanded_pred.append(new_box)
+
+            print('Expanding original {} preds to {} preds'.format(
+                len(self.lvis_dt.dataset['annotations']),
+                len(expanded_pred)
+                ))
+            self.lvis_dt.dataset['annotations'] = expanded_pred
+            self.lvis_dt._create_index()
+        
+        # per-image per-category evaluation results
+        self.eval_imgs = 
