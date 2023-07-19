@@ -182,4 +182,15 @@ class OIDEval:
         # convert ground truth to mask if iou_type == 'segm'
         if self.params.iou_type == "segm":
             self._to_mask(gts, self.lvis_gt)
-            self._to_mask(dts, self.
+            self._to_mask(dts, self.lvis_dt)
+
+        for gt in gts:
+            self._gts[gt["image_id"], gt["category_id"]].append(gt)
+
+        # For federated dataset evaluation we will filter out all dt for an
+        # image which belong to categories not present in gt and not present in
+        # the negative list for an image. In other words detector is not penalized
+        # for categories about which we don't have gt information about their
+        # presence or absence in an image.
+        img_data = self.lvis_gt.load_imgs(ids=self.params.img_ids)
+        # per image map of categories not present in ima
