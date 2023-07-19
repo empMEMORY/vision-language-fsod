@@ -168,4 +168,18 @@ class OIDEval:
             rle = lvis.ann_to_rle(ann)
             ann["segmentation"] = rle
 
-    def _p
+    def _prepare(self):
+        """Prepare self._gts and self._dts for evaluation based on params."""
+
+        cat_ids = self.params.cat_ids if self.params.cat_ids else None
+
+        gts = self.lvis_gt.load_anns(
+            self.lvis_gt.get_ann_ids(img_ids=self.params.img_ids, cat_ids=cat_ids)
+        )
+        dts = self.lvis_dt.load_anns(
+            self.lvis_dt.get_ann_ids(img_ids=self.params.img_ids, cat_ids=cat_ids)
+        )
+        # convert ground truth to mask if iou_type == 'segm'
+        if self.params.iou_type == "segm":
+            self._to_mask(gts, self.lvis_gt)
+            self._to_mask(dts, self.
