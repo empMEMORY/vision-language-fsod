@@ -152,4 +152,20 @@ class OIDEval:
             self.lvis_dt._create_index()
         
         # per-image per-category evaluation results
-        self.eval_imgs = 
+        self.eval_imgs = defaultdict(list)
+        self.eval = {}  # accumulated evaluation results
+        self._gts = defaultdict(list)  # gt for evaluation
+        self._dts = defaultdict(list)  # dt for evaluation
+        self.params = Params(iou_type=iou_type)  # parameters
+        self.results = OrderedDict()
+        self.ious = {}  # ious between all gts and dts
+
+        self.params.img_ids = sorted(self.lvis_gt.get_img_ids())
+        self.params.cat_ids = sorted(self.lvis_gt.get_cat_ids())
+
+    def _to_mask(self, anns, lvis):
+        for ann in anns:
+            rle = lvis.ann_to_rle(ann)
+            ann["segmentation"] = rle
+
+    def _p
