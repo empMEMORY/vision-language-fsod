@@ -193,4 +193,17 @@ class OIDEval:
         # for categories about which we don't have gt information about their
         # presence or absence in an image.
         img_data = self.lvis_gt.load_imgs(ids=self.params.img_ids)
-        # per image map of categories not present in ima
+        # per image map of categories not present in image
+        img_nl = {d["id"]: d["neg_category_ids"] for d in img_data}
+        # per image list of categories present in image
+        img_pl = {d["id"]: d["pos_category_ids"] for d in img_data}
+        # img_pl = defaultdict(set)
+        for ann in gts:
+            # img_pl[ann["image_id"]].add(ann["category_id"])
+            assert ann["category_id"] in img_pl[ann["image_id"]]
+        # print('check pos ids OK.')
+        
+        for dt in dts:
+            img_id, cat_id = dt["image_id"], dt["category_id"]
+            if cat_id not in img_nl[img_id] and cat_id not in img_pl[img_id]:
+      
