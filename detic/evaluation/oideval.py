@@ -206,4 +206,24 @@ class OIDEval:
         for dt in dts:
             img_id, cat_id = dt["image_id"], dt["category_id"]
             if cat_id not in img_nl[img_id] and cat_id not in img_pl[img_id]:
-      
+                continue
+            self._dts[img_id, cat_id].append(dt)
+
+    def evaluate(self):
+        """
+        Run per image evaluation on given images and store results
+        (a list of dict) in self.eval_imgs.
+        """
+        self.logger.info("Running per image evaluation.")
+        self.logger.info("Evaluate annotation type *{}*".format(self.params.iou_type))
+
+        self.params.img_ids = list(np.unique(self.params.img_ids))
+
+        if self.params.use_cats:
+            cat_ids = self.params.cat_ids
+        else:
+            cat_ids = [-1]
+
+        self._prepare()
+
+        self.ious
