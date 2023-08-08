@@ -243,4 +243,20 @@ class OIDEval:
 
     def _get_gt_dt(self, img_id, cat_id):
         """Create gt, dt which are list of anns/dets. If use_cats is true
-        only anns
+        only anns/dets corresponding to tuple (img_id, cat_id) will be
+        used. Else, all anns/dets in image are used and cat_id is not used.
+        """
+        if self.params.use_cats:
+            gt = self._gts[img_id, cat_id]
+            dt = self._dts[img_id, cat_id]
+        else:
+            gt = [
+                _ann
+                for _cat_id in self.params.cat_ids
+                for _ann in self._gts[img_id, cat_id]
+            ]
+            dt = [
+                _ann
+                for _cat_id in self.params.cat_ids
+                for _ann in self._dts[img_id, cat_id]
+       
