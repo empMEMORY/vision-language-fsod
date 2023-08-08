@@ -278,3 +278,20 @@ class OIDEval:
         if self.params.iou_type == "segm":
             ann_type = "segmentation"
         elif self.params.iou_type == "bbox":
+            ann_type = "bbox"
+        else:
+            raise ValueError("Unknown iou_type for iou computation.")
+        gt = [g[ann_type] for g in gt]
+        dt = [d[ann_type] for d in dt]
+
+        # compute iou between each dt and gt region
+        # will return array of shape len(dt), len(gt)
+        ious = mask_utils.iou(dt, gt, iscrowd)
+        return ious
+
+    def evaluate_img_google(self, img_id, cat_id, area_rng):
+        gt, dt = self._get_gt_dt(img_id, cat_id)
+        if len(gt) == 0 and len(dt) == 0:
+            return None
+        
+        if len(
