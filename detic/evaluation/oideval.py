@@ -226,4 +226,21 @@ class OIDEval:
 
         self._prepare()
 
-        self.ious
+        self.ious = {
+            (img_id, cat_id): self.compute_iou(img_id, cat_id)
+            for img_id in self.params.img_ids
+            for cat_id in cat_ids
+        }
+
+        # loop through images, area range, max detection number
+        print('Evaluating ...')
+        self.eval_imgs = [
+            self.evaluate_img_google(img_id, cat_id, area_rng)
+            for cat_id in cat_ids
+            for area_rng in self.params.area_rng
+            for img_id in self.params.img_ids
+        ]
+
+    def _get_gt_dt(self, img_id, cat_id):
+        """Create gt, dt which are list of anns/dets. If use_cats is true
+        only anns
