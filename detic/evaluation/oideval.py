@@ -259,4 +259,22 @@ class OIDEval:
                 _ann
                 for _cat_id in self.params.cat_ids
                 for _ann in self._dts[img_id, cat_id]
-       
+            ]
+        return gt, dt
+
+    def compute_iou(self, img_id, cat_id):
+        gt, dt = self._get_gt_dt(img_id, cat_id)
+
+        if len(gt) == 0 and len(dt) == 0:
+            return []
+
+        # Sort detections in decreasing order of score.
+        idx = np.argsort([-d["score"] for d in dt], kind="mergesort")
+        dt = [dt[i] for i in idx]
+
+        # iscrowd = [int(False)] * len(gt)
+        iscrowd = [int('iscrowd' in g and g['iscrowd'] > 0) for g in gt]
+
+        if self.params.iou_type == "segm":
+            ann_type = "segmentation"
+        elif self.params.iou_type == "bbox":
