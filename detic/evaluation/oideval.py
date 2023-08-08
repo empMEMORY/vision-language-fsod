@@ -294,4 +294,18 @@ class OIDEval:
         if len(gt) == 0 and len(dt) == 0:
             return None
         
-        if len(
+        if len(dt) == 0:
+            return {
+                "image_id": img_id,
+                "category_id": cat_id,
+                "area_rng": area_rng,
+                "dt_ids": [],
+                "dt_matches": np.array([], dtype=np.int32).reshape(1, -1),
+                "dt_scores": [],
+                "dt_ignore": np.array([], dtype=np.int32).reshape(1, -1),
+                'num_gt': len(gt)
+            }
+
+        no_crowd_inds = [i for i, g in enumerate(gt) \
+            if ('iscrowd' not in g) or g['iscrowd'] == 0]
+        crowd_inds = [i for i, g in enumerate(gt)
