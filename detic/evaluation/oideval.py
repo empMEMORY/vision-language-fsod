@@ -308,4 +308,20 @@ class OIDEval:
 
         no_crowd_inds = [i for i, g in enumerate(gt) \
             if ('iscrowd' not in g) or g['iscrowd'] == 0]
-        crowd_inds = [i for i, g in enumerate(gt)
+        crowd_inds = [i for i, g in enumerate(gt) \
+            if 'iscrowd' in g and g['iscrowd'] == 1]
+        dt_idx = np.argsort([-d["score"] for d in dt], kind="mergesort")
+
+        if len(self.ious[img_id, cat_id]) > 0:
+            ious = self.ious[img_id, cat_id]
+            iou = ious[:, no_crowd_inds]
+            iou = iou[dt_idx]
+            ioa = ious[:, crowd_inds]
+            ioa = ioa[dt_idx]
+        else:
+            iou = np.zeros((len(dt_idx), 0))
+            ioa = np.zeros((len(dt_idx), 0))
+        scores = np.array([dt[i]['score'] for i in dt_idx])
+
+        num_detected_boxes = len(dt)
+        tp_fp_label
