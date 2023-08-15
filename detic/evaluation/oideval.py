@@ -324,4 +324,16 @@ class OIDEval:
         scores = np.array([dt[i]['score'] for i in dt_idx])
 
         num_detected_boxes = len(dt)
-        tp_fp_label
+        tp_fp_labels = np.zeros(num_detected_boxes, dtype=bool)
+        is_matched_to_group_of = np.zeros(num_detected_boxes, dtype=bool)
+
+        def compute_match_iou(iou):
+            max_overlap_gt_ids = np.argmax(iou, axis=1)
+            is_gt_detected = np.zeros(iou.shape[1], dtype=bool)
+            for i in range(num_detected_boxes):
+                gt_id = max_overlap_gt_ids[i]
+                is_evaluatable = (not tp_fp_labels[i] and
+                                iou[i, gt_id] >= 0.5 and
+                                not is_matched_to_group_of[i])
+                if is_evaluatable:
+                    if not is_gt_d
