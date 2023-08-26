@@ -349,4 +349,18 @@ class OIDEval:
                 gt_id = max_overlap_group_of_gt_ids[i]
                 is_evaluatable = (not tp_fp_labels[i] and
                                 ioa[i, gt_id] >= 0.5 and
-                                
+                                not is_matched_to_group_of[i])
+                if is_evaluatable:
+                    is_matched_to_group_of[i] = True
+                    scores_group_of[gt_id] = max(scores_group_of[gt_id], scores[i])
+            selector = np.where((scores_group_of > 0) & (tp_fp_labels_group_of > 0))
+            scores_group_of = scores_group_of[selector]
+            tp_fp_labels_group_of = tp_fp_labels_group_of[selector]
+
+            return scores_group_of, tp_fp_labels_group_of
+
+        if iou.shape[1] > 0:
+            compute_match_iou(iou)
+
+        scores_box_group_of = np.ndarray([0], dtype=float)
+        tp_fp_l
