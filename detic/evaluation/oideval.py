@@ -363,4 +363,21 @@ class OIDEval:
             compute_match_iou(iou)
 
         scores_box_group_of = np.ndarray([0], dtype=float)
-        tp_fp_l
+        tp_fp_labels_box_group_of = np.ndarray([0], dtype=float)
+
+        if ioa.shape[1] > 0:
+            scores_box_group_of, tp_fp_labels_box_group_of = compute_match_ioa(ioa)
+
+        valid_entries = (~is_matched_to_group_of)
+
+        scores =  np.concatenate(
+            (scores[valid_entries], scores_box_group_of))
+        tp_fps = np.concatenate(
+            (tp_fp_labels[valid_entries].astype(float),
+             tp_fp_labels_box_group_of))
+    
+        return {
+            "image_id": img_id,
+            "category_id": cat_id,
+            "area_rng": area_rng,
+            "dt_matches": np.array([1 if
