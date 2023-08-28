@@ -380,4 +380,22 @@ class OIDEval:
             "image_id": img_id,
             "category_id": cat_id,
             "area_rng": area_rng,
-            "dt_matches": np.array([1 if
+            "dt_matches": np.array([1 if x > 0 else 0 for x in tp_fps], dtype=np.int32).reshape(1, -1),
+            "dt_scores": [x for x in scores],
+            "dt_ignore":  np.array([0 for x in scores], dtype=np.int32).reshape(1, -1),
+            'num_gt': len(gt)
+        }
+
+    def accumulate(self):
+        """Accumulate per image evaluation results and store the result in
+        self.eval.
+        """
+        self.logger.info("Accumulating evaluation results.")
+
+        if not self.eval_imgs:
+            self.logger.warn("Please run evaluate first.")
+
+        if self.params.use_cats:
+            cat_ids = self.params.cat_ids
+        else:
+    
