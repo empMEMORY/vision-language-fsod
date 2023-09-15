@@ -398,4 +398,26 @@ class OIDEval:
         if self.params.use_cats:
             cat_ids = self.params.cat_ids
         else:
-    
+            cat_ids = [-1]
+
+        num_thrs = 1
+        num_recalls = 1
+
+        num_cats = len(cat_ids)
+        num_area_rngs = 1
+        num_imgs = len(self.params.img_ids)
+
+        # -1 for absent categories
+        precision = -np.ones(
+            (num_thrs, num_recalls, num_cats, num_area_rngs)
+        )
+        recall = -np.ones((num_thrs, num_cats, num_area_rngs))
+
+        # Initialize dt_pointers
+        dt_pointers = {}
+        for cat_idx in range(num_cats):
+            dt_pointers[cat_idx] = {}
+            for area_idx in range(num_area_rngs):
+                dt_pointers[cat_idx][area_idx] = {}
+
+        # Per ca
