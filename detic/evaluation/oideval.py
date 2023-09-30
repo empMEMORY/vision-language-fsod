@@ -420,4 +420,19 @@ class OIDEval:
             for area_idx in range(num_area_rngs):
                 dt_pointers[cat_idx][area_idx] = {}
 
-        # Per ca
+        # Per category evaluation
+        for cat_idx in range(num_cats):
+            Nk = cat_idx * num_area_rngs * num_imgs
+            for area_idx in range(num_area_rngs):
+                Na = area_idx * num_imgs
+                E = [
+                    self.eval_imgs[Nk + Na + img_idx]
+                    for img_idx in range(num_imgs)
+                ]
+                # Remove elements which are None
+                E = [e for e in E if not e is None]
+                if len(E) == 0:
+                    continue
+
+                dt_scores = np.concatenate([e["dt_scores"] for e in E], axis=0)
+             
