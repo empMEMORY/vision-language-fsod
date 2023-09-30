@@ -435,4 +435,16 @@ class OIDEval:
                     continue
 
                 dt_scores = np.concatenate([e["dt_scores"] for e in E], axis=0)
-             
+                dt_idx = np.argsort(-dt_scores, kind="mergesort")
+                dt_scores = dt_scores[dt_idx]
+                dt_m = np.concatenate([e["dt_matches"] for e in E], axis=1)[:, dt_idx]
+                dt_ig = np.concatenate([e["dt_ignore"] for e in E], axis=1)[:, dt_idx]
+
+                num_gt = sum([e['num_gt'] for e in E])
+                if num_gt == 0:
+                    continue
+
+                tps = np.logical_and(dt_m, np.logical_not(dt_ig))
+                fps = np.logical_and(np.logical_not(dt_m), np.logical_not(dt_ig))
+                tp_sum = np.cumsum(tps, axis=1).astype(dtype=np.float)
+  
