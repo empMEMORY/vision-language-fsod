@@ -447,4 +447,19 @@ class OIDEval:
                 tps = np.logical_and(dt_m, np.logical_not(dt_ig))
                 fps = np.logical_and(np.logical_not(dt_m), np.logical_not(dt_ig))
                 tp_sum = np.cumsum(tps, axis=1).astype(dtype=np.float)
-  
+                fp_sum = np.cumsum(fps, axis=1).astype(dtype=np.float)
+
+                dt_pointers[cat_idx][area_idx] = {
+                    "tps": tps,
+                    "fps": fps,
+                }
+
+                for iou_thr_idx, (tp, fp) in enumerate(zip(tp_sum, fp_sum)):
+                    tp = np.array(tp)
+                    fp = np.array(fp)
+                    num_tp = len(tp)
+                    rc = tp / num_gt
+                    
+                    if num_tp:
+                        recall[iou_thr_idx, cat_idx, area_idx] = rc[
+                           
