@@ -478,4 +478,21 @@ class OIDEval:
                     mAP = compute_average_precision(
                         np.array(pr, np.float).reshape(-1), 
                         np.array(rc, np.float).reshape(-1))
-                 
+                    precision[iou_thr_idx, :, cat_idx, area_idx] = mAP
+
+        self.eval = {
+            "params": self.params,
+            "counts": [num_thrs, num_recalls, num_cats, num_area_rngs],
+            "date": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "precision": precision,
+            "recall": recall,
+            "dt_pointers": dt_pointers,
+        }
+
+    def _summarize(self, summary_type):
+        s = self.eval["precision"]
+        if len(s[s > -1]) == 0:
+            mean_s = -1
+        else:
+            mean_s = np.mean(s[s > -1])
+            
