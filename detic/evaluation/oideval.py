@@ -462,4 +462,20 @@ class OIDEval:
                     
                     if num_tp:
                         recall[iou_thr_idx, cat_idx, area_idx] = rc[
-                           
+                            -1
+                        ]
+                    else:
+                        recall[iou_thr_idx, cat_idx, area_idx] = 0
+
+                    # np.spacing(1) ~= eps
+                    pr = tp / (fp + tp + np.spacing(1))
+                    pr = pr.tolist()
+
+                    for i in range(num_tp - 1, 0, -1):
+                        if pr[i] > pr[i - 1]:
+                            pr[i - 1] = pr[i]
+
+                    mAP = compute_average_precision(
+                        np.array(pr, np.float).reshape(-1), 
+                        np.array(rc, np.float).reshape(-1))
+                 
