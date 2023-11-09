@@ -495,4 +495,22 @@ class OIDEval:
             mean_s = -1
         else:
             mean_s = np.mean(s[s > -1])
-            
+            # print(s.reshape(1, 1, -1, 1))
+        return mean_s
+
+    def summarize(self):
+        """Compute and display summary metrics for evaluation results."""
+        if not self.eval:
+            raise RuntimeError("Please run accumulate() first.")
+
+        max_dets = self.params.max_dets
+        self.results["AP50"] = self._summarize('ap')
+
+    def run(self):
+        """Wrapper function which calculates the results."""
+        self.evaluate()
+        self.accumulate()
+        self.summarize()
+
+    def print_results(self):
+        template = " {:<18} {} @[ IoU={:<9} | area={:>6s} | maxDets={:>3d} catIds={:>3s}] = {
