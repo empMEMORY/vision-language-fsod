@@ -532,4 +532,22 @@ class OIDEval:
                     self.params.iou_thrs[0], self.params.iou_thrs[-1]
                 )
 
-            cat_g
+            cat_group_name = "all"
+            area_rng = "all"
+
+            print(template.format(title, _type, iou, area_rng, max_dets, cat_group_name, value))
+
+    def get_results(self):
+        if not self.results:
+            self.logger.warn("results is empty. Call run().")
+        return self.results
+
+
+class Params:
+    def __init__(self, iou_type):
+        self.img_ids = []
+        self.cat_ids = []
+        # np.arange causes trouble.  the data point on arange is slightly
+        # larger than the true value
+        self.iou_thrs = np.linspace(
+            0.5, 0.95, int(np.
