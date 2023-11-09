@@ -513,4 +513,23 @@ class OIDEval:
         self.summarize()
 
     def print_results(self):
-        template = " {:<18} {} @[ IoU={:<9} | area={:>6s} | maxDets={:>3d} catIds={:>3s}] = {
+        template = " {:<18} {} @[ IoU={:<9} | area={:>6s} | maxDets={:>3d} catIds={:>3s}] = {:0.3f}"
+
+        for key, value in self.results.items():
+            max_dets = self.params.max_dets
+            if "AP" in key:
+                title = "Average Precision"
+                _type = "(AP)"
+            else:
+                title = "Average Recall"
+                _type = "(AR)"
+
+            if len(key) > 2 and key[2].isdigit():
+                iou_thr = (float(key[2:]) / 100)
+                iou = "{:0.2f}".format(iou_thr)
+            else:
+                iou = "{:0.2f}:{:0.2f}".format(
+                    self.params.iou_thrs[0], self.params.iou_thrs[-1]
+                )
+
+            cat_g
