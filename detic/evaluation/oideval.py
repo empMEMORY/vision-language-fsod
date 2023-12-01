@@ -571,4 +571,19 @@ class OIDEvaluator(DatasetEvaluator):
         self._output_dir = output_dir
 
         self._cpu_device = torch.device("cpu")
-        self._logge
+        self._logger = logging.getLogger(__name__)
+
+        self._metadata = MetadataCatalog.get(dataset_name)
+        json_file = PathManager.get_local_path(self._metadata.json_file)
+        self._oid_api = LVIS(json_file)
+        # Test set json files do not contain annotations (evaluation must be
+        # performed using the LVIS evaluation server).
+        self._do_evaluation = len(self._oid_api.get_ann_ids()) > 0
+        self._mask_on = cfg.MODEL.MASK_ON
+
+    def reset(self):
+        self._predictions = []
+        self._oid_results = []
+
+    def process(self, inputs, outputs):
+        for input, outp
