@@ -550,4 +550,25 @@ class Params:
         # np.arange causes trouble.  the data point on arange is slightly
         # larger than the true value
         self.iou_thrs = np.linspace(
-            0.5, 0.95, int(np.
+            0.5, 0.95, int(np.round((0.95 - 0.5) / 0.05)) + 1, endpoint=True
+        )
+        self.google_style = True
+        # print('Using google style PR curve')
+        self.iou_thrs = self.iou_thrs[:1]
+        self.max_dets = 1000
+
+        self.area_rng = [
+            [0 ** 2, 1e5 ** 2],
+        ]
+        self.area_rng_lbl = ["all"]
+        self.use_cats = 1
+        self.iou_type = iou_type
+
+
+class OIDEvaluator(DatasetEvaluator):
+    def __init__(self, dataset_name, cfg, distributed, output_dir=None):
+        self._distributed = distributed
+        self._output_dir = output_dir
+
+        self._cpu_device = torch.device("cpu")
+        self._logge
