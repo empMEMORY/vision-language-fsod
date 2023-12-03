@@ -586,4 +586,18 @@ class OIDEvaluator(DatasetEvaluator):
         self._oid_results = []
 
     def process(self, inputs, outputs):
-        for input, outp
+        for input, output in zip(inputs, outputs):
+            prediction = {"image_id": input["image_id"]}
+            instances = output["instances"].to(self._cpu_device)
+            prediction["instances"] = instances_to_coco_json(
+                instances, input["image_id"])
+            self._predictions.append(prediction)
+
+    def evaluate(self):
+        if self._distributed:
+            comm.synchronize()
+            self._predictions = comm.gather(self._predictions, dst=0)
+            self._predictions = list(itertools.chain(*self._predictions))
+
+            if not comm.is_main_process():
+                r
