@@ -600,4 +600,20 @@ class OIDEvaluator(DatasetEvaluator):
             self._predictions = list(itertools.chain(*self._predictions))
 
             if not comm.is_main_process():
-                r
+                return
+
+        if len(self._predictions) == 0:
+            self._logger.warning("[LVISEvaluator] Did not receive valid predictions.")
+            return {}
+
+        self._logger.info("Preparing results in the OID format ...")
+        self._oid_results = list(
+            itertools.chain(*[x["instances"] for x in self._predictions]))
+
+        # unmap the category ids for LVIS (from 0-indexed to 1-indexed)
+        for result in self._oid_results:
+            result["category_id"] += 1
+
+        PathManager.mkdirs(self._output_dir)
+        file_path = os.path.join(
+            self._output_dir
