@@ -648,4 +648,21 @@ def _evaluate_predictions_on_oid(
 
     results = {}
     oid_eval = OIDEval(oid_gt, oid_results_path, 'bbox', expand_pred_label=False)
-    oid_e
+    oid_eval.run()
+    oid_eval.print_results()
+    results["AP50"] = oid_eval.get_results()["AP50"]
+
+    if eval_seg:
+        oid_eval = OIDEval(oid_gt, oid_results_path, 'segm', expand_pred_label=False)
+        oid_eval.run()
+        oid_eval.print_results()
+        results["AP50_segm"] = oid_eval.get_results()["AP50"]
+    else:
+        oid_eval = OIDEval(oid_gt, oid_results_path, 'bbox', expand_pred_label=True)
+        oid_eval.run()
+        oid_eval.print_results()
+        results["AP50_expand"] = oid_eval.get_results()["AP50"]
+
+    mAP = np.zeros(len(class_names)) - 1
+    precisions = oid_eval.eval['precision']
+    assert len(c
