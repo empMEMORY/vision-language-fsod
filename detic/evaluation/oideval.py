@@ -632,4 +632,20 @@ class OIDEvaluator(DatasetEvaluator):
             self._oid_api,
             file_path,
             eval_seg=self._mask_on,
-            
+            class_names=self._metadata.get("thing_classes"),
+        )
+        self._results['bbox'] = res
+        mAP_out_path = os.path.join(self._output_dir, "oid_mAP.npy")
+        self._logger.info('Saving mAP to' + mAP_out_path)
+        np.save(mAP_out_path, mAP)
+        return copy.deepcopy(self._results)
+
+def _evaluate_predictions_on_oid(
+    oid_gt, oid_results_path, eval_seg=False,
+    class_names=None):
+    logger = logging.getLogger(__name__)
+    metrics = ["AP50", "AP50_expand"]
+
+    results = {}
+    oid_eval = OIDEval(oid_gt, oid_results_path, 'bbox', expand_pred_label=False)
+    oid_e
