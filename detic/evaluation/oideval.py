@@ -616,4 +616,20 @@ class OIDEvaluator(DatasetEvaluator):
 
         PathManager.mkdirs(self._output_dir)
         file_path = os.path.join(
-            self._output_dir
+            self._output_dir, "oid_instances_results.json")
+        self._logger.info("Saving results to {}".format(file_path))
+        with PathManager.open(file_path, "w") as f:
+            f.write(json.dumps(self._oid_results))
+            f.flush()
+
+        if not self._do_evaluation:
+            self._logger.info("Annotations are not available for evaluation.")
+            return
+
+        self._logger.info("Evaluating predictions ...")
+        self._results = OrderedDict()
+        res, mAP = _evaluate_predictions_on_oid(
+            self._oid_api,
+            file_path,
+            eval_seg=self._mask_on,
+            
