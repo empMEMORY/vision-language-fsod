@@ -665,4 +665,29 @@ def _evaluate_predictions_on_oid(
 
     mAP = np.zeros(len(class_names)) - 1
     precisions = oid_eval.eval['precision']
-    assert len(c
+    assert len(class_names) == precisions.shape[2]
+    results_per_category = []
+    id2apiid = sorted(oid_gt.get_cat_ids())
+    inst_aware_ap, inst_count = 0, 0
+    for idx, name in enumerate(class_names):
+        precision = precisions[:, :, idx, 0]
+        precision = precision[precision > -1]
+        ap = np.mean(precision) if precision.size else float("nan")
+        inst_num = len(oid_gt.get_ann_ids(cat_ids=[id2apiid[idx]]))
+        if inst_num > 0:
+            results_per_category.append(("{} {}".format(
+                name.replace(' ', '_'), 
+                inst_num if inst_num < 1000 else '{:.1f}k'.format(inst_num / 1000)), 
+                float(ap * 100)))
+            inst_aware_ap += inst_num * ap
+            inst_count += inst_num
+            mAP[idx] = ap
+            # logger.info("{} {} {:.2f}".format(name, inst_num, ap * 100))
+    inst_aware_ap = inst_aware_ap * 100 / inst_count
+    N_COLS = min(6, len(results_per_category) * 2)
+    results_flatten = list(itertools.chain(*results_per_category))
+    results_2d = itertools.zip_longest(*[results_flatten[i::N_COLS] for i in range(N_COLS)])
+    table = tabulate(
+        results_2d,
+        tablefmt="pipe",
+        floa
