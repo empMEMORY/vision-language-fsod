@@ -690,4 +690,13 @@ def _evaluate_predictions_on_oid(
     table = tabulate(
         results_2d,
         tablefmt="pipe",
-        floa
+        floatfmt=".3f",
+        headers=["category", "AP"] * (N_COLS // 2),
+        numalign="left",
+    )
+    logger.info("Per-category {} AP: \n".format('bbox') + table)
+    logger.info("Instance-aware {} AP: {:.4f}".format('bbox', inst_aware_ap))
+
+    logger.info("Evaluation results for bbox: \n" + \
+        create_small_table(results))
+    return results, mAP
