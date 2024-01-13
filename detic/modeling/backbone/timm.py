@@ -101,3 +101,122 @@ class LastLevelP6P7_P5(nn.Module):
         self.num_levels = 2
         self.in_feature = "p5"
         self.p6 = nn.Conv2d(in_channels, out_channels, 3, 2, 1)
+        self.p7 = nn.Conv2d(out_channels, out_channels, 3, 2, 1)
+        for module in [self.p6, self.p7]:
+            weight_init.c2_xavier_fill(module)
+
+    def forward(self, c5):
+        p6 = self.p6(c5)
+        p7 = self.p7(F.relu(p6))
+        return [p6, p7]
+
+
+def freeze_module(x):
+    """
+    """
+    for p in x.parameters():
+        p.requires_grad = False
+    FrozenBatchNorm2d.convert_frozen_batchnorm(x)
+    return x
+
+
+class TIMM(Backbone):
+    def __init__(self, base_name, out_levels, freeze_at=0, norm='FrozenBN', pretrained=False):
+        super().__init__()
+        out_indices = [x - 1 for x in out_levels]
+        if base_name in model_params:
+            self.base = create_timm_resnet(
+                base_name, out_indices=out_indices, 
+                pretrained=False)
+        elif 'eff' in base_name or 'resnet' in base_name or 'regnet' in base_name:
+            self.base = create_model(
+                base_name, features_only=True, 
+                out_indices=out_indices, pretrained=pretrained)
+        elif 'convnext' in base_name:
+            drop_path_rate = 0.2 \
+                if ('tiny' in base_name or 'small' in base_name) else 0.3
+            self.base = create_model(
+                base_name, features_only=True, 
+                out_indices=out_indices, pretrained=pretrained,
+                drop_path_rate=drop_path_rate)
+        else:
+            assert 0, base_name
+        feature_info = [dict(num_chs=f['num_chs'], reduction=f['reduction']) \
+            for i, f in enumerate(self.base.feature_info)] 
+        self._out_features = ['layer{}'.format(x) for x in out_levels]
+        self._out_feature_channels = {
+            'layer{}'.format(l): feature_info[l - 1]['num_chs'] for l in out_levels}
+        self._out_feature_strides = {
+            'layer{}'.format(l): feature_info[l - 1]['reduction'] for l in out_levels}
+        self._size_divisibility = max(self._out_feature_strides.values())
+        if 'resnet' in base_name:
+            self.freeze(freeze_at)
+        if norm == 'FrozenBN':
+            self = FrozenBatchNorm2d.convert_frozen_batchnorm(self)
+
+    def freeze(self, freeze_at=0):
+        """
+        """
+        if freeze_at >= 1:
+            print('Frezing', self.base.conv1)
+            self.base.conv1 = freeze_module(self.base.conv1)
+        if freeze_at >= 2:
+            print('Frezing', self.base.layer1)
+            self.base.layer1 = freeze_module(self.base.layer1)
+
+    def forward(self, x):
+        features = self.base(x)
+        ret = {k: v for k, v in zip(self._out_features, features)}
+        return ret
+    
+    @property
+    def size_divisibility(self):
+        return self._size_divisibility
+
+
+@BACKBONE_REGISTRY.register()
+def build_timm_backbone(cfg, input_shape):
+    model = TIMM(
+        cfg.MODEL.TIMM.BASE_NAME, 
+        cfg.MODEL.TIMM.OUT_LEVELS,
+        freeze_at=cfg.MODEL.TIMM.FREEZE_AT,
+        norm=cfg.MODEL.TIMM.NORM,
+        pretrained=cfg.MODEL.TIMM.PRETRAINED,
+    )
+    return model
+
+
+@BACKBONE_REGISTRY.register()
+def build_p67_timm_fpn_backbone(cfg, input_shape):
+    """
+    """
+    bottom_up = build_timm_backbone(cfg, input_shape)
+    in_features = cfg.MODEL.FPN.IN_FEATURES
+    out_channels = cfg.MODEL.FPN.OUT_CHANNELS
+    backbone = FPN(
+        bottom_up=bottom_up,
+        in_features=in_features,
+        out_channels=out_channels,
+        norm=cfg.MODEL.FPN.NORM,
+        top_block=LastLevelP6P7_P5(out_channels, out_channels),
+        fuse_type=cfg.MODEL.FPN.FUSE_TYPE,
+    )
+    return backbone
+
+@BACKBONE_REGISTRY.register()
+def build_p35_timm_fpn_backbone(cfg, input_shape):
+    """
+    """
+    bottom_up = build_timm_backbone(cfg, input_shape)
+    
+    in_features = cfg.MODEL.FPN.IN_FEATURES
+    out_channels = cfg.MODEL.FPN.OUT_CHANNELS
+    backbone = FPN(
+        bottom_up=bottom_up,
+        in_features=in_features,
+        out_channels=out_channels,
+        norm=cfg.MODEL.FPN.NORM,
+        top_block=None,
+        fuse_type=cfg.MODEL.FPN.FUSE_TYPE,
+    )
+    return backbone
