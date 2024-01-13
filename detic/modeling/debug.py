@@ -49,4 +49,23 @@ def _decompose_level(x, shapes_per_level, N):
         st += h * w * N
     return ret
 
-def _imagelist_to_tens
+def _imagelist_to_tensor(images):
+    images = [x for x in images]
+    image_sizes = [x.shape[-2:] for x in images]
+    h = max([size[0] for size in image_sizes])
+    w = max([size[1] for size in image_sizes])
+    S = 32
+    h, w = ((h - 1) // S + 1) * S, ((w - 1) // S + 1) * S
+    images = [F.pad(x, (0, w - x.shape[2], 0, h - x.shape[1], 0, 0)) \
+        for x in images]
+    images = torch.stack(images)
+    return images
+
+
+def _ind2il(ind, shapes_per_level, N):
+    r = ind
+    l = 0
+    S = 0
+    while r - S >= N * shapes_per_level[l][0] * shapes_per_level[l][1]:
+        S += N * shapes_per_level[l][0] * shapes_per_level[l][1]
+      
