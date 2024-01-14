@@ -68,4 +68,22 @@ def _ind2il(ind, shapes_per_level, N):
     S = 0
     while r - S >= N * shapes_per_level[l][0] * shapes_per_level[l][1]:
         S += N * shapes_per_level[l][0] * shapes_per_level[l][1]
-      
+        l += 1
+    i = (r - S) // (shapes_per_level[l][0] * shapes_per_level[l][1])
+    return i, l
+
+def debug_train(
+    images, gt_instances, flattened_hms, reg_targets, labels, pos_inds,
+    shapes_per_level, locations, strides):
+    '''
+    images: N x 3 x H x W
+    flattened_hms: LNHiWi x C
+    shapes_per_level: L x 2 [(H_i, W_i)]
+    locations: LNHiWi x 2
+    '''
+    reg_inds = torch.nonzero(
+        reg_targets.max(dim=1)[0] > 0).squeeze(1)
+    N = len(images)
+    images = _imagelist_to_tensor(images)
+    repeated_locations = [torch.cat([loc] * N, dim=0) \
+     
