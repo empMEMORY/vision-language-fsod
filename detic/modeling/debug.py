@@ -86,4 +86,16 @@ def debug_train(
     N = len(images)
     images = _imagelist_to_tensor(images)
     repeated_locations = [torch.cat([loc] * N, dim=0) \
-     
+        for loc in locations]
+    locations = torch.cat(repeated_locations, dim=0)
+    gt_hms = _decompose_level(flattened_hms, shapes_per_level, N)
+    masks = flattened_hms.new_zeros((flattened_hms.shape[0], 1))
+    masks[pos_inds] = 1
+    masks = _decompose_level(masks, shapes_per_level, N)
+    for i in range(len(images)):
+        image = images[i].detach().cpu().numpy().transpose(1, 2, 0)
+        color_maps = []
+        for l in range(len(gt_hms)):
+            color_map = _get_color_image(
+                gt_hms[l][i].detach().cpu().numpy())
+            color_maps.append(color_map
