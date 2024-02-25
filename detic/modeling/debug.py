@@ -128,4 +128,23 @@ def debug_train(
             ltrb *= strides[l]
             loc = locations[reg_inds[j]]
             bbox = [(loc[0] - ltrb[0]), (loc[1] - ltrb[1]),
-              
+                    (loc[0] + ltrb[2]), (loc[1] + ltrb[3])]
+            cv2.rectangle(
+                blend, 
+                (int(bbox[0]), int(bbox[1])),
+                (int(bbox[2]), int(bbox[3])),
+                (255, 0, 0), 1, cv2.LINE_AA)  
+            cv2.circle(blend, (int(loc[0]), int(loc[1])), 2, (255, 0, 0), -1)
+
+        cv2.imshow('blend', blend)
+        cv2.waitKey()
+
+
+def debug_test(
+    images, logits_pred, reg_pred, agn_hm_pred=[], preds=[], 
+    vis_thresh=0.3, debug_show_name=False, mult_agn=False):
+    '''
+    images: N x 3 x H x W
+    class_target: LNHiWi x C
+    cat_agn_heatmap: LNHiWi
+    
