@@ -98,4 +98,18 @@ def debug_train(
         for l in range(len(gt_hms)):
             color_map = _get_color_image(
                 gt_hms[l][i].detach().cpu().numpy())
-            color_maps.append(color_map
+            color_maps.append(color_map)
+            cv2.imshow('gthm_{}'.format(l), color_map)
+        blend = _blend_image_heatmaps(image.copy(), color_maps)
+        if gt_instances is not None:
+            bboxes = gt_instances[i].gt_boxes.tensor
+            for j in range(len(bboxes)):
+                bbox = bboxes[j]
+                cv2.rectangle(
+                    blend, 
+                    (int(bbox[0]), int(bbox[1])),
+                    (int(bbox[2]), int(bbox[3])),
+                    (0, 0, 255), 3, cv2.LINE_AA)
+    
+        for j in range(len(pos_inds)):
+            image_id, l = _ind2il(
