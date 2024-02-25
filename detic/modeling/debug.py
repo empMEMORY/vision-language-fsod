@@ -112,4 +112,20 @@ def debug_train(
                     (0, 0, 255), 3, cv2.LINE_AA)
     
         for j in range(len(pos_inds)):
-            image_id, l = _ind2il(
+            image_id, l = _ind2il(pos_inds[j], shapes_per_level, N)
+            if image_id != i:
+                continue
+            loc = locations[pos_inds[j]]
+            cv2.drawMarker(
+                blend, (int(loc[0]), int(loc[1])), (0, 255, 255),
+                markerSize=(l + 1) * 16)
+        
+        for j in range(len(reg_inds)):
+            image_id, l = _ind2il(reg_inds[j], shapes_per_level, N)
+            if image_id != i:
+                continue
+            ltrb = reg_targets[reg_inds[j]]
+            ltrb *= strides[l]
+            loc = locations[reg_inds[j]]
+            bbox = [(loc[0] - ltrb[0]), (loc[1] - ltrb[1]),
+              
