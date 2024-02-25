@@ -147,4 +147,18 @@ def debug_test(
     images: N x 3 x H x W
     class_target: LNHiWi x C
     cat_agn_heatmap: LNHiWi
-    
+    shapes_per_level: L x 2 [(H_i, W_i)]
+    '''
+    N = len(images)
+    for i in range(len(images)):
+        image = images[i].detach().cpu().numpy().transpose(1, 2, 0)
+        result = image.copy().astype(np.uint8)
+        pred_image = image.copy().astype(np.uint8)
+        color_maps = []
+        L = len(logits_pred)
+        for l in range(L):
+            if logits_pred[0] is not None:
+                stride = min(image.shape[0], image.shape[1]) / min(
+                    logits_pred[l][i].shape[1], logits_pred[l][i].shape[2])
+            else:
+           
