@@ -161,4 +161,16 @@ def debug_test(
                 stride = min(image.shape[0], image.shape[1]) / min(
                     logits_pred[l][i].shape[1], logits_pred[l][i].shape[2])
             else:
-           
+                stride = min(image.shape[0], image.shape[1]) / min(
+                    agn_hm_pred[l][i].shape[1], agn_hm_pred[l][i].shape[2])
+            stride = stride if stride < 60 else 64 if stride < 100 else 128
+            if logits_pred[0] is not None:
+                if mult_agn:
+                    logits_pred[l][i] = logits_pred[l][i] * agn_hm_pred[l][i]
+                color_map = _get_color_image(
+                    logits_pred[l][i].detach().cpu().numpy())
+                color_maps.append(color_map)
+                cv2.imshow('predhm_{}'.format(l), color_map)
+
+            if debug_show_name:
+     
