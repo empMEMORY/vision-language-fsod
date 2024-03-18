@@ -182,4 +182,15 @@ def debug_test(
                         preds[i].pred_boxes[j]
                     bbox = bbox.tensor[0].detach().cpu().numpy().astype(np.int32)
                     cat = int(preds[i].pred_classes[j]) \
-  
+                        if preds[i].has('pred_classes') else 0
+                    cl = COLORS[cat, 0, 0]
+                    cv2.rectangle(
+                        pred_image, (int(bbox[0]), int(bbox[1])), 
+                        (int(bbox[2]), int(bbox[3])), 
+                        (int(cl[0]), int(cl[1]), int(cl[2])), 2, cv2.LINE_AA)
+                    if debug_show_name:
+                        txt = '{}{:.1f}'.format(
+                            cat2name[cat] if cat > 0 else '', 
+                            preds[i].scores[j])
+                        font = cv2.FONT_HERSHEY_SIMPLEX
+   
