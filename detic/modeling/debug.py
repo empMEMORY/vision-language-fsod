@@ -173,4 +173,13 @@ def debug_test(
                 cv2.imshow('predhm_{}'.format(l), color_map)
 
             if debug_show_name:
-     
+                from detectron2.data.datasets.lvis_v1_categories import LVIS_CATEGORIES 
+                cat2name = [x['name'] for x in LVIS_CATEGORIES]
+            for j in range(len(preds[i].scores) if preds is not None else 0):
+                if preds[i].scores[j] > vis_thresh:
+                    bbox = preds[i].proposal_boxes[j] \
+                        if preds[i].has('proposal_boxes') else \
+                        preds[i].pred_boxes[j]
+                    bbox = bbox.tensor[0].detach().cpu().numpy().astype(np.int32)
+                    cat = int(preds[i].pred_classes[j]) \
+  
