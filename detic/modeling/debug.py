@@ -219,4 +219,18 @@ cnt = 0
 
 def debug_second_stage(images, instances, proposals=None, vis_thresh=0.3, 
     save_debug=False, debug_show_name=False, image_labels=[],
-    save_debug_path='output/sav
+    save_debug_path='output/save_debug/',
+    bgr=False):
+    images = _imagelist_to_tensor(images)
+    if 'COCO' in save_debug_path:
+        from detectron2.data.datasets.builtin_meta import COCO_CATEGORIES
+        cat2name = [x['name'] for x in COCO_CATEGORIES]
+    else:
+        from detectron2.data.datasets.lvis_v1_categories import LVIS_CATEGORIES
+        cat2name = ['({}){}'.format(x['frequency'], x['name']) \
+            for x in LVIS_CATEGORIES]
+    for i in range(len(images)):
+        image = images[i].detach().cpu().numpy().transpose(1, 2, 0).astype(np.uint8).copy()
+        if bgr:
+            image = image[:, :, ::-1].copy()
+     
