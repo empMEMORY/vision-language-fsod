@@ -233,4 +233,17 @@ def debug_second_stage(images, instances, proposals=None, vis_thresh=0.3,
         image = images[i].detach().cpu().numpy().transpose(1, 2, 0).astype(np.uint8).copy()
         if bgr:
             image = image[:, :, ::-1].copy()
-     
+        if instances[i].has('gt_boxes'):
+            bboxes = instances[i].gt_boxes.tensor.cpu().numpy()
+            scores = np.ones(bboxes.shape[0])
+            cats = instances[i].gt_classes.cpu().numpy()
+        else:
+            bboxes = instances[i].pred_boxes.tensor.cpu().numpy()
+            scores = instances[i].scores.cpu().numpy()
+            cats = instances[i].pred_classes.cpu().numpy()
+        for j in range(len(bboxes)):
+            if scores[j] > vis_thresh:
+                bbox = bboxes[j]
+                cl = COLORS[cats[j], 0, 0]
+                cl = (int(cl[0]), int(cl[1]), int(cl[2]))
+                
