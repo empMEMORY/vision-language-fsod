@@ -204,4 +204,19 @@ def debug_test(
                             font, 0.5, (0, 0, 0), thickness=1, lineType=cv2.LINE_AA)
 
 
-            if agn_hm_p
+            if agn_hm_pred[l] is not None:
+                agn_hm_ = agn_hm_pred[l][i, 0, :, :, None].detach().cpu().numpy()
+                agn_hm_ = (agn_hm_ * np.array([255, 255, 255]).reshape(
+                    1, 1, 3)).astype(np.uint8)
+                cv2.imshow('agn_hm_{}'.format(l), agn_hm_)
+        blend = _blend_image_heatmaps(image.copy(), color_maps)
+        cv2.imshow('blend', blend)
+        cv2.imshow('preds', pred_image)
+        cv2.waitKey()
+
+global cnt
+cnt = 0
+
+def debug_second_stage(images, instances, proposals=None, vis_thresh=0.3, 
+    save_debug=False, debug_show_name=False, image_labels=[],
+    save_debug_path='output/sav
