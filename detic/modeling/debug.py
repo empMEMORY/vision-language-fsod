@@ -259,4 +259,13 @@ def debug_second_stage(images, instances, proposals=None, vis_thresh=0.3,
                     font = cv2.FONT_HERSHEY_SIMPLEX
                     cat_size = cv2.getTextSize(txt, font, 0.5, 2)[0]
                     cv2.rectangle(
-                
+                        image,
+                        (int(bbox[0]), int(bbox[1] - cat_size[1] - 2)),
+                        (int(bbox[0] + cat_size[0]), int(bbox[1] - 2)), 
+                        (int(cl[0]), int(cl[1]), int(cl[2])), -1)
+                    cv2.putText(
+                        image, txt, (int(bbox[0]), int(bbox[1] - 2)), 
+                        font, 0.5, (0, 0, 0), thickness=1, lineType=cv2.LINE_AA)
+        if proposals is not None:
+            proposal_image = images[i].detach().cpu().numpy().transpose(1, 2, 0).astype(np.uint8).copy()
+            if bgr:
