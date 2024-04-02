@@ -246,4 +246,17 @@ def debug_second_stage(images, instances, proposals=None, vis_thresh=0.3,
                 bbox = bboxes[j]
                 cl = COLORS[cats[j], 0, 0]
                 cl = (int(cl[0]), int(cl[1]), int(cl[2]))
+                cv2.rectangle(
+                    image, 
+                    (int(bbox[0]), int(bbox[1])),
+                    (int(bbox[2]), int(bbox[3])),
+                    cl, 2, cv2.LINE_AA)
+                if debug_show_name:
+                    cat = cats[j]
+                    txt = '{}{:.1f}'.format(
+                        cat2name[cat] if cat > 0 else '', 
+                        scores[j])
+                    font = cv2.FONT_HERSHEY_SIMPLEX
+                    cat_size = cv2.getTextSize(txt, font, 0.5, 2)[0]
+                    cv2.rectangle(
                 
