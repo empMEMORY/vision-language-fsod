@@ -269,3 +269,16 @@ def debug_second_stage(images, instances, proposals=None, vis_thresh=0.3,
         if proposals is not None:
             proposal_image = images[i].detach().cpu().numpy().transpose(1, 2, 0).astype(np.uint8).copy()
             if bgr:
+                proposal_image = proposal_image.copy()
+            else:
+                proposal_image = proposal_image[:, :, ::-1].copy()
+            bboxes = proposals[i].proposal_boxes.tensor.cpu().numpy()
+            if proposals[i].has('scores'):
+                scores = proposals[i].scores.detach().cpu().numpy()
+            else:
+                scores = proposals[i].objectness_logits.detach().cpu().numpy()
+            # selected = -1
+            # if proposals[i].has('image_loss'):
+            #     selected = proposals[i].image_loss.argmin()
+            if proposals[i].has('selected'):
+ 
