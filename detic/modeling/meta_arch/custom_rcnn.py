@@ -32,4 +32,24 @@ class CustomRCNN(GeneralizedRCNN):
     def __init__(
         self, 
         with_image_labels = False,
-        dataset_loss_w
+        dataset_loss_weight = [],
+        fp16 = False,
+        sync_caption_batch = False,
+        roi_head_name = '',
+        cap_batch_ratio = 4,
+        with_caption = False,
+        dynamic_classifier = False,
+        modify_neg_loss = False,
+        use_zs_preds_nl = False,
+        zs_preds_path_nl = None,
+        zs_conf_thresh = None,
+        use_gt_nl = False,
+        gt_path_nl = None,
+
+        **kwargs):
+        """
+        """
+        self.with_image_labels = with_image_labels
+        self.dataset_loss_weight = dataset_loss_weight
+        self.fp16 = fp16
+        self.with_caption = with_capt
