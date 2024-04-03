@@ -306,4 +306,17 @@ def debug_second_stage(images, instances, proposals=None, vis_thresh=0.3,
                             proposal_image,
                             (int(bbox[0]), int(bbox[1] - cat_size[1] - 2)),
                             (int(bbox[0] + cat_size[0]), int(bbox[1] - 2)), 
-                 
+                            (int(cl[0]), int(cl[1]), int(cl[2])), -1)
+                        cv2.putText(
+                            proposal_image, txt, 
+                            (int(bbox[0]), int(bbox[1] - 2)), 
+                            font, 0.5, (0, 0, 0), thickness=1, 
+                            lineType=cv2.LINE_AA)
+
+        if save_debug:
+            global cnt
+            cnt = (cnt + 1) % 5000
+            if not os.path.exists(save_debug_path):
+                os.mkdir(save_debug_path)
+            save_name = '{}/{:05d}.jpg'.format(save_debug_path, cnt)
+            if i < len(image_la
