@@ -52,4 +52,18 @@ class CustomRCNN(GeneralizedRCNN):
         self.with_image_labels = with_image_labels
         self.dataset_loss_weight = dataset_loss_weight
         self.fp16 = fp16
-        self.with_caption = with_capt
+        self.with_caption = with_caption
+        self.sync_caption_batch = sync_caption_batch
+        self.roi_head_name = roi_head_name
+        self.cap_batch_ratio = cap_batch_ratio
+        self.dynamic_classifier = dynamic_classifier
+        self.return_proposal = False
+        self.modify_neg_loss = modify_neg_loss
+        self.use_zs_preds_nl = use_zs_preds_nl
+        self.zs_preds_path_nl = zs_preds_path_nl 
+        self.use_gt_nl = use_gt_nl 
+        self.gt_path_nl = gt_path_nl
+        self.zs_conf_thresh = zs_conf_thresh
+
+        if modify_neg_loss and use_gt_nl:
+            self.gt_annos = self.get_anno_from_gt
