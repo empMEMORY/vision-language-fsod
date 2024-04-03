@@ -281,4 +281,19 @@ def debug_second_stage(images, instances, proposals=None, vis_thresh=0.3,
             # if proposals[i].has('image_loss'):
             #     selected = proposals[i].image_loss.argmin()
             if proposals[i].has('selected'):
- 
+                selected = proposals[i].selected
+            else:
+                selected = [-1 for _ in range(len(bboxes))]
+            for j in range(len(bboxes)):
+                if scores[j] > vis_thresh or selected[j] >= 0:
+                    bbox = bboxes[j]
+                    cl = (209, 159, 83)
+                    th = 2
+                    if selected[j] >= 0:
+                        cl = (0, 0, 0xa4)
+                        th = 4
+                    cv2.rectangle(
+                        proposal_image, 
+                        (int(bbox[0]), int(bbox[1])),
+                        (int(bbox[2]), int(bbox[3])),
+     
