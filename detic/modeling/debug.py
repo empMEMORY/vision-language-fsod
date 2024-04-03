@@ -296,4 +296,14 @@ def debug_second_stage(images, instances, proposals=None, vis_thresh=0.3,
                         proposal_image, 
                         (int(bbox[0]), int(bbox[1])),
                         (int(bbox[2]), int(bbox[3])),
-     
+                        cl, th, cv2.LINE_AA)
+                    if selected[j] >= 0 and debug_show_name:
+                        cat = selected[j].item()
+                        txt = '{}'.format(cat2name[cat])
+                        font = cv2.FONT_HERSHEY_SIMPLEX
+                        cat_size = cv2.getTextSize(txt, font, 0.5, 2)[0]
+                        cv2.rectangle(
+                            proposal_image,
+                            (int(bbox[0]), int(bbox[1] - cat_size[1] - 2)),
+                            (int(bbox[0] + cat_size[0]), int(bbox[1] - 2)), 
+                 
