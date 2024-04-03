@@ -66,4 +66,15 @@ class CustomRCNN(GeneralizedRCNN):
         self.zs_conf_thresh = zs_conf_thresh
 
         if modify_neg_loss and use_gt_nl:
-            self.gt_annos = self.get_anno_from_gt
+            self.gt_annos = self.get_anno_from_gt_file()
+        if self.dynamic_classifier:
+            self.freq_weight = kwargs.pop('freq_weight')
+            self.num_classes = kwargs.pop('num_classes')
+            self.num_sample_cats = kwargs.pop('num_sample_cats')
+            self.keep_neg_cls_inds = kwargs.pop('keep_neg_cls_inds')
+            self.inverse_weights = kwargs.pop('fed_inverse_weight')
+            self.deterministic_fed_loss = kwargs.pop('deterministic_fed_loss')
+            self.all_ann_file = kwargs.pop('all_ann_file')
+
+            if self.deterministic_fed_loss:
+                all_train_data = load
