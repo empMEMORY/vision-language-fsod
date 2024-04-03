@@ -319,4 +319,16 @@ def debug_second_stage(images, instances, proposals=None, vis_thresh=0.3,
             if not os.path.exists(save_debug_path):
                 os.mkdir(save_debug_path)
             save_name = '{}/{:05d}.jpg'.format(save_debug_path, cnt)
-            if i < len(image_la
+            if i < len(image_labels):
+                image_label = image_labels[i]
+                save_name = '{}/{:05d}'.format(save_debug_path, cnt)
+                for x in image_label:
+                    class_name = cat2name[x]
+                    save_name = save_name + '|{}'.format(class_name)
+                save_name = save_name + '.jpg'
+            cv2.imwrite(save_name, proposal_image)
+        else:
+            cv2.imshow('image', image)
+            if proposals is not None:
+                cv2.imshow('proposals', proposal_image)
+            cv2.waitKey()
