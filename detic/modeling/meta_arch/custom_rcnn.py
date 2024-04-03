@@ -77,4 +77,18 @@ class CustomRCNN(GeneralizedRCNN):
             self.all_ann_file = kwargs.pop('all_ann_file')
 
             if self.deterministic_fed_loss:
-                all_train_data = load
+                all_train_data = load_coco_json(self.all_ann_file, '', dataset_name='_')
+        
+                self.img_cat_map = {}
+                for idx, img_info in enumerate(all_train_data):
+                    # img_id = img_info['image_id']
+                    
+                    all_cats = [x['category_id'] for x in img_info['annotations']]
+                    img_name = os.path.basename(img_info['file_name'])
+                    
+                    self.img_cat_map[img_name] = all_cats
+
+
+        super().__init__(**kwargs)
+        assert self.proposal_generator is not None
+        if self.with
