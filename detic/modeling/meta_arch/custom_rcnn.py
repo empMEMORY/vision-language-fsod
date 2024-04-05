@@ -91,4 +91,19 @@ class CustomRCNN(GeneralizedRCNN):
 
         super().__init__(**kwargs)
         assert self.proposal_generator is not None
-        if self.with
+        if self.with_caption:
+            assert not self.dynamic_classifier
+            self.text_encoder = build_text_encoder(pretrain=True)
+            for v in self.text_encoder.parameters():
+                v.requires_grad = False
+
+    def get_anno_from_gt_file(self):
+        assert self.gt_path_nl is not None, "self.gt_path_nl is None, add correct path"
+
+        with open(self.gt_path_nl, 'r') as f:
+            gt_annos = json.load(f)
+        
+        img_anno_map = defaultdict(list)
+        for anno in gt_annos['annotations']:
+            img_id = anno['image_id']
+            fi
