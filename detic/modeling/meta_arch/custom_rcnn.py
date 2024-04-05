@@ -121,4 +121,16 @@ class CustomRCNN(GeneralizedRCNN):
             'with_caption': cfg.MODEL.WITH_CAPTION,
             'sync_caption_batch': cfg.MODEL.SYNC_CAPTION_BATCH,
             'dynamic_classifier': cfg.MODEL.DYNAMIC_CLASSIFIER,
-            'roi_head_name': cfg.MODEL.ROI
+            'roi_head_name': cfg.MODEL.ROI_HEADS.NAME,
+            'cap_batch_ratio': cfg.MODEL.CAP_BATCH_RATIO,
+            'modify_neg_loss': cfg.MODEL.NEG_LOSS.MODIFY,
+            'use_zs_preds_nl': cfg.MODEL.NEG_LOSS.USE_ZS_PREDS,
+            'zs_preds_path_nl': cfg.MODEL.NEG_LOSS.ZS_PREDS_PATH,
+            'use_gt_nl': cfg.MODEL.NEG_LOSS.USE_GT,
+            'gt_path_nl': cfg.MODEL.NEG_LOSS.GT_PATH,
+            'zs_conf_thresh': cfg.MODEL.NEG_LOSS.ZS_CONF_THRESH,
+        })
+        if ret['dynamic_classifier']:
+            ret['freq_weight'] = load_class_freq(
+                cfg.MODEL.ROI_BOX_HEAD.CAT_FREQ_PATH,
+                c
