@@ -106,4 +106,19 @@ class CustomRCNN(GeneralizedRCNN):
         img_anno_map = defaultdict(list)
         for anno in gt_annos['annotations']:
             img_id = anno['image_id']
-            fi
+            file_name = gt_annos['images'][img_id]['file_name']
+            img_anno_map[file_name].append(anno)
+
+        return img_anno_map
+
+    @classmethod
+    def from_config(cls, cfg):
+        ret = super().from_config(cfg)
+        ret.update({
+            'with_image_labels': cfg.WITH_IMAGE_LABELS,
+            'dataset_loss_weight': cfg.MODEL.DATASET_LOSS_WEIGHT,
+            'fp16': cfg.FP16,
+            'with_caption': cfg.MODEL.WITH_CAPTION,
+            'sync_caption_batch': cfg.MODEL.SYNC_CAPTION_BATCH,
+            'dynamic_classifier': cfg.MODEL.DYNAMIC_CLASSIFIER,
+            'roi_head_name': cfg.MODEL.ROI
