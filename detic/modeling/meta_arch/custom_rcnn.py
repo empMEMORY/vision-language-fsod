@@ -133,4 +133,18 @@ class CustomRCNN(GeneralizedRCNN):
         if ret['dynamic_classifier']:
             ret['freq_weight'] = load_class_freq(
                 cfg.MODEL.ROI_BOX_HEAD.CAT_FREQ_PATH,
-                c
+                cfg.MODEL.ROI_BOX_HEAD.FED_LOSS_FREQ_WEIGHT,
+                )
+            ret['num_classes'] = cfg.MODEL.ROI_HEADS.NUM_CLASSES
+            ret['num_sample_cats'] = cfg.MODEL.NUM_SAMPLE_CATS
+            ret['keep_neg_cls_inds'] = cfg.MODEL.ROI_BOX_HEAD.KEEP_FED_NEG_CLS_INDS
+            ret['fed_inverse_weight'] = cfg.MODEL.ROI_BOX_HEAD.INVERSE_WEIGHTS
+            ret['all_ann_file'] = cfg.MODEL.ROI_BOX_HEAD.ALL_ANN_FILE
+            ret['deterministic_fed_loss'] = cfg.MODEL.ROI_BOX_HEAD.DETERMINISTIC_FED_LOSS
+
+        return ret
+
+    def inference(
+        self,
+        batched_inputs: Tuple[Dict[str, torch.Tensor]],
+ 
