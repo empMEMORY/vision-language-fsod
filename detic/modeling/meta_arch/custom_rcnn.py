@@ -157,4 +157,15 @@ class CustomRCNN(GeneralizedRCNN):
             file_names = [x['file_name'] for x in batched_inputs]
             gt_instances = [x["instances"].to(self.device) for x in batched_inputs]
             features = self.backbone(images.tensor)
-            proposals, _ = self.proposal_generator(images, features, gt_instance
+            proposals, _ = self.proposal_generator(images, features, gt_instances)
+            results, _ = self.roi_heads(images, features, proposals, gt_instances, file_names=file_names)   # call to Cascade ROI class
+        else:
+            file_names=None
+            features = self.backbone(images.tensor)
+            proposals, _ = self.proposal_generator(images, features, None)
+            results, _ = self.roi_heads(images, features, proposals, None)   # call to Cascade ROI class
+
+        if do_postprocess:
+            assert not torch.jit.is_scripting(), \
+                "Scripting is not supported for postprocess."
+            return CustomRCNN._postprocess(
