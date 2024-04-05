@@ -147,4 +147,14 @@ class CustomRCNN(GeneralizedRCNN):
     def inference(
         self,
         batched_inputs: Tuple[Dict[str, torch.Tensor]],
- 
+        detected_instances: Optional[List[Instances]] = None,
+        do_postprocess: bool = True,
+    ):
+        assert not self.training
+        assert detected_instances is None
+        images = self.preprocess_image(batched_inputs)
+        if 'file_name' in batched_inputs[0]:
+            file_names = [x['file_name'] for x in batched_inputs]
+            gt_instances = [x["instances"].to(self.device) for x in batched_inputs]
+            features = self.backbone(images.tensor)
+            proposals, _ = self.proposal_generator(images, features, gt_instance
