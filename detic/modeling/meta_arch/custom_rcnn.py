@@ -200,4 +200,15 @@ class CustomRCNN(GeneralizedRCNN):
         
         if self.fp16: # TODO (zhouxy): improve
             with autocast():
-    
+                features = self.backbone(images.tensor.half())
+            features = {k: v.float() for k, v in features.items()}
+        else:
+            features = self.backbone(images.tensor)
+
+        cls_features, cls_inds, caption_features = None, None, None
+        if self.with_caption and 'caption' in ann_type:
+            inds = [torch.randint(len(x['captions']), (1,))[0].item() \
+                for x in batched_inputs]
+            caps = [x['captions'][ind] for ind, x in zip(inds, batched_inputs)]
+            caption_features = self.text_encoder(caps).float()
+        if self.sync_c
