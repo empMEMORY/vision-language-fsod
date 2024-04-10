@@ -186,4 +186,18 @@ class CustomRCNN(GeneralizedRCNN):
         
         ann_type = 'box'
         file_names = [x['file_name'] for x in batched_inputs]
-        gt_instances = [x["instances"].to(self.device) for x in ba
+        gt_instances = [x["instances"].to(self.device) for x in batched_inputs]
+        if self.with_image_labels:
+            for inst, x in zip(gt_instances, batched_inputs):
+                inst._ann_type = x['ann_type']
+                inst._pos_category_ids = x['pos_category_ids']
+            ann_types = [x['ann_type'] for x in batched_inputs]
+            assert len(set(ann_types)) == 1
+            ann_type = ann_types[0]
+            if ann_type in ['prop', 'proptag']:
+                for t in gt_instances:
+                    t.gt_classes *= 0
+        
+        if self.fp16: # TODO (zhouxy): improve
+            with autocast():
+    
