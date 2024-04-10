@@ -169,3 +169,21 @@ class CustomRCNN(GeneralizedRCNN):
             assert not torch.jit.is_scripting(), \
                 "Scripting is not supported for postprocess."
             return CustomRCNN._postprocess(
+                results, batched_inputs, images.image_sizes)
+        else:
+            return results
+
+
+    def forward(self, batched_inputs: List[Dict[str, torch.Tensor]], valmode=False):
+        """
+        Add ann_type
+        Ignore proposal loss when training with image labels
+        """
+        if not self.training:
+            return self.inference(batched_inputs)
+
+        images = self.preprocess_image(batched_inputs)
+        
+        ann_type = 'box'
+        file_names = [x['file_name'] for x in batched_inputs]
+        gt_instances = [x["instances"].to(self.device) for x in ba
