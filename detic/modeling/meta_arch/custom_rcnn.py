@@ -237,4 +237,13 @@ class CustomRCNN(GeneralizedRCNN):
             else:
                 raise Exception('Either ZS predictions or GT labels to modify neg loss need to be True')
             proposals, proposal_losses = self.proposal_generator(
-                images, features
+                images, features, gt_instances, negloss_boxes_path=extra_boxes_path, file_names=file_names, zs_conf_thresh=self.zs_conf_thresh, zs_negboxes=self.use_zs_preds_nl)
+        else:
+            proposals, proposal_losses = self.proposal_generator(
+                images, features, gt_instances, file_names=file_names)    # add pseudotargets here
+            
+        if self.roi_head_name in ['StandardROIHeads', 'CascadeROIHeads']:    # default is DeticCascadeROIHeads
+            proposals, detector_losses = self.roi_heads(
+                images, features, proposals, gt_instances, file_names, valmode=valmode)
+        else:
+    
