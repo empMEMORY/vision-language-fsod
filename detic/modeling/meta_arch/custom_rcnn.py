@@ -211,4 +211,14 @@ class CustomRCNN(GeneralizedRCNN):
                 for x in batched_inputs]
             caps = [x['captions'][ind] for ind, x in zip(inds, batched_inputs)]
             caption_features = self.text_encoder(caps).float()
-        if self.sync_c
+        if self.sync_caption_batch:
+            caption_features = self._sync_caption_features(
+                caption_features, ann_type, len(batched_inputs))
+        
+        if self.dynamic_classifier and ann_type != 'caption':
+
+            ###### when using _sample_cls_inds()
+
+            # cls_inds = self._sample_cls_inds(gt_instances, ann_type)
+            # ind_with_bg = cls_inds[0].tolist() + [-1]               # [gt_inds with -1 for background]
+            # cls_features = self.roi_heads.box_predictor[                                  # clip embedding 
