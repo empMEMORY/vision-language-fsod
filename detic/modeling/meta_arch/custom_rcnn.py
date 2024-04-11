@@ -285,4 +285,19 @@ class CustomRCNN(GeneralizedRCNN):
             device=self.device)
         if not has_caption_feature:
             caption_features = rank.new_zeros((BS, 512))
-        caption_features = torch.cat([caption_features
+        caption_features = torch.cat([caption_features, rank], dim=1)
+        global_caption_features = comm.all_gather(caption_features)
+        caption_features = torch.cat(
+            [x.to(self.device) for x in global_caption_features], dim=0) \
+                if has_caption_feature else None # (NB) x (D + 1)
+        return caption_features
+
+
+    def _sample_cls_inds(self, gt_instances, ann_type='box'):
+        if ann_type == 'box':
+            gt_classes = torch.cat(
+                [x.gt_classes for x in gt_instances])
+            C = len(self.freq_weight)
+            freq_weight = self.freq_weight
+        else:
+            gt_classes = torch.c
