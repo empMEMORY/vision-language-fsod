@@ -312,4 +312,12 @@ class CustomRCNN(GeneralizedRCNN):
             gt_classes, self.num_sample_cats, C, 
             weight=freq_weight, keep_inds=self.keep_neg_cls_inds, inverse_weights=self.inverse_weights)
         cls_id_map = gt_classes.new_full(
-            (self.num_classes + 1,), len(ind
+            (self.num_classes + 1,), len(inds))           # new tensor of size (self.num_classes+1,) with all values = len(inds) i.e len(GT+ sampled negative categories)
+        cls_id_map[inds] = torch.arange(len(inds), device=cls_id_map.device)      # for len(inds)=4 , the cls_id_map would look like [4,4,2,4,3,4,4,0,1,4], where 0,1,2,3 are the inds correpsonding to GT+sampled negative classes.
+        return inds, cls_id_map
+
+
+    def _sample_cls_inds2(self, gt_instances, ann_type='box', file_names=None):
+        # return boolean mask, num_batches x num_classes to indicate sampled (or deterministic (pos+neg) classes)
+
+ 
