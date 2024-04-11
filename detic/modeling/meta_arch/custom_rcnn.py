@@ -221,4 +221,11 @@ class CustomRCNN(GeneralizedRCNN):
 
             # cls_inds = self._sample_cls_inds(gt_instances, ann_type)
             # ind_with_bg = cls_inds[0].tolist() + [-1]               # [gt_inds with -1 for background]
-            # cls_features = self.roi_heads.box_predictor[                                  # clip embedding 
+            # cls_features = self.roi_heads.box_predictor[                                  # clip embedding used here (I think)
+            #     0].cls_score.zs_weight[:, ind_with_bg].permute(1, 0).contiguous()                    #shape  512x len(ind_with_bg)
+
+            cls_inds = self._sample_cls_inds2(gt_instances, ann_type, file_names=file_names) # inds, inv_inds     # gt_instances here correspond to FSOD annotations or whatever GT given in Instances class format
+            cls_features = self.roi_heads.box_predictor[                                  # clip embedding used here (I think)
+                0].cls_score.zs_weight.permute(1, 0).contiguous()    
+        
+        clas
