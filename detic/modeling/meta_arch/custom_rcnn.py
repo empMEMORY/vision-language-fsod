@@ -269,4 +269,20 @@ class CustomRCNN(GeneralizedRCNN):
             assert len(set(dataset_sources)) == 1
             dataset_source = dataset_sources[0]
             for k in losses:
-                losses[k] *= self.dataset_loss_weight[dataset
+                losses[k] *= self.dataset_loss_weight[dataset_source]
+        
+        if self.return_proposal:
+            return proposals, losses
+        else:
+            return losses
+
+
+    def _sync_caption_features(self, caption_features, ann_type, BS):
+        has_caption_feature = (caption_features is not None)
+        BS = (BS * self.cap_batch_ratio) if (ann_type == 'box') else BS
+        rank = torch.full(
+            (BS, 1), comm.get_rank(), dtype=torch.float32, 
+            device=self.device)
+        if not has_caption_feature:
+            caption_features = rank.new_zeros((BS, 512))
+        caption_features = torch.cat([caption_features
