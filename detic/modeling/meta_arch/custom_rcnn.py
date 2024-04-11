@@ -258,4 +258,15 @@ class CustomRCNN(GeneralizedRCNN):
         losses = {}
         losses.update(detector_losses)
         if self.with_image_labels:
-            if ann_type in ['
+            if ann_type in ['box', 'prop', 'proptag']:
+                losses.update(proposal_losses)
+            else: # ignore proposal loss for non-bbox data
+                losses.update({k: v * 0 for k, v in proposal_losses.items()})
+        else:
+            losses.update(proposal_losses)
+        if len(self.dataset_loss_weight) > 0:
+            dataset_sources = [x['dataset_source'] for x in batched_inputs]
+            assert len(set(dataset_sources)) == 1
+            dataset_source = dataset_sources[0]
+            for k in losses:
+                losses[k] *= self.dataset_loss_weight[dataset
