@@ -228,4 +228,13 @@ class CustomRCNN(GeneralizedRCNN):
             cls_features = self.roi_heads.box_predictor[                                  # clip embedding used here (I think)
                 0].cls_score.zs_weight.permute(1, 0).contiguous()    
         
-        clas
+        classifier_info = cls_features, cls_inds, caption_features                            #  this classifier _info is used in DeticFastRCNNOutputLayer forward method
+        if self.modify_neg_loss:
+            if self.use_zs_preds_nl:
+                extra_boxes_path = self.zs_preds_path_nl
+            elif self.use_gt_nl:
+                extra_boxes_path = self.gt_annos
+            else:
+                raise Exception('Either ZS predictions or GT labels to modify neg loss need to be True')
+            proposals, proposal_losses = self.proposal_generator(
+                images, features
