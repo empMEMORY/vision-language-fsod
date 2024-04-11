@@ -246,4 +246,16 @@ class CustomRCNN(GeneralizedRCNN):
             proposals, detector_losses = self.roi_heads(
                 images, features, proposals, gt_instances, file_names, valmode=valmode)
         else:
-    
+            proposals, detector_losses = self.roi_heads(
+                images, features, proposals, gt_instances,
+                ann_type=ann_type, classifier_info=classifier_info, file_names=file_names, valmode=valmode)
+        
+        if self.vis_period > 0:
+            storage = get_event_storage()
+            if storage.iter % self.vis_period == 0:
+                self.visualize_training(batched_inputs, proposals)
+
+        losses = {}
+        losses.update(detector_losses)
+        if self.with_image_labels:
+            if ann_type in ['
