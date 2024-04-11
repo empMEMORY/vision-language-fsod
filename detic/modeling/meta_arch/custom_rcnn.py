@@ -300,4 +300,16 @@ class CustomRCNN(GeneralizedRCNN):
             C = len(self.freq_weight)
             freq_weight = self.freq_weight
         else:
-            gt_classes = torch.c
+            gt_classes = torch.cat(
+                [torch.tensor(
+                    x._pos_category_ids, 
+                    dtype=torch.long, device=x.gt_classes.device) \
+                    for x in gt_instances])
+            C = self.num_classes
+            freq_weight = None
+        assert gt_classes.max() < C, '{} {}'.format(gt_classes.max(), C)
+        inds = get_fed_loss_inds(
+            gt_classes, self.num_sample_cats, C, 
+            weight=freq_weight, keep_inds=self.keep_neg_cls_inds, inverse_weights=self.inverse_weights)
+        cls_id_map = gt_classes.new_full(
+            (self.num_classes + 1,), len(ind
