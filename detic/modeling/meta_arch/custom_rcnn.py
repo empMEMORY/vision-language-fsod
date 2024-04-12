@@ -320,4 +320,17 @@ class CustomRCNN(GeneralizedRCNN):
     def _sample_cls_inds2(self, gt_instances, ann_type='box', file_names=None):
         # return boolean mask, num_batches x num_classes to indicate sampled (or deterministic (pos+neg) classes)
 
- 
+        if ann_type == 'box':
+            gt_classes = torch.cat(
+                [x.gt_classes for x in gt_instances])
+            batchwise_gt_classes = [x.gt_classes for x in gt_instances]
+            gt_classes = torch.cat(batchwise_gt_classes)
+            C = len(self.freq_weight)
+            num_batches = len(batchwise_gt_classes)
+            sampled_mask = torch.zeros((num_batches, C))
+            freq_weight = self.freq_weight
+        else:
+            gt_classes = torch.cat(
+                [torch.tensor(
+                    x._pos_category_ids, 
+                    dtype=torch.long, device=x.gt
