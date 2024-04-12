@@ -333,4 +333,14 @@ class CustomRCNN(GeneralizedRCNN):
             gt_classes = torch.cat(
                 [torch.tensor(
                     x._pos_category_ids, 
-                    dtype=torch.long, device=x.gt
+                    dtype=torch.long, device=x.gt_classes.device) \
+                    for x in gt_instances])
+            C = self.num_classes
+            freq_weight = None
+        assert gt_classes.max() < C, '{} {}'.format(gt_classes.max(), C)
+
+        inds_mask, appeared_inds = get_fed_loss_inds_deterministic(batchwise_gt_classes, self.img_cat_map, file_names=file_names, C=C)
+        cls_id_map = gt_classes.new_full((self.num_classes + 1,), len(appeared_inds)) 
+        cls_id_map[appeared_inds] = torch.arange(len(appeared_inds), device=cls_id_map.device) 
+
+        return inds_mask, cls_id_map
