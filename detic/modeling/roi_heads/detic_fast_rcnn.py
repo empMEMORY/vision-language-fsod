@@ -293,3 +293,424 @@ class DeticFastRCNNOutputLayers(FastRCNNOutputLayers):
         target = target[:, :C] # B x C
 
         weight = 1
+ 
+        if self.use_fed_loss and (self.freq_weight is not None): #and not valmode: # fedloss
+            ### get negative classes deterministically.
+            if self.deterministic_fed_loss:
+                if self.img_neg_cat_map is not None:
+                    fed_w_mask, fed_w_cats = get_fed_loss_inds_deterministic_with_negs(
+                    gt_classes,
+                    file_names,
+                    C=C,
+                    dataset_name = self.dataset_train_name, 
+                    img_neg_cat_map=self.img_neg_cat_map
+                )
+                else:
+                    fed_w_mask, fed_w_cats = get_fed_loss_inds_deterministic2(
+                        gt_classes,
+                        self.img_cat_map,
+                        file_names,
+                        C=C,
+                        dataset_name = self.dataset_train_name,
+                    )
+            else:
+                fed_w_mask, _ = get_fed_loss_inds_prob(
+                    gt_classes,
+                    num_sample_cats=self.fed_loss_num_cat,
+                    C=C,
+                    weight=self.freq_weight,
+                    inverse_weights=self.inverse_weights_fed_loss
+                )
+
+            fed_w = fed_w_mask[:,:-1]
+           
+            weight = weight * fed_w.float()
+        if self.ignore_zero_cats and (self.freq_weight is not None):
+            w = (self.freq_weight.view(-1) > 1e-4).float()
+            weight = weight * w.view(1, C).expand(B, C)
+
+        cls_loss = F.binary_cross_entropy_with_logits(
+            pred_class_logits[:, :-1], target, reduction='none') # B x C
+        try:
+            loss =  torch.sum(cls_loss * weight) / B  
+        except:
+            import ipdb; ipdb.set_trace()
+        return loss
+        
+    
+    def softmax_cross_entropy_loss(self, pred_class_logits, gt_classes):
+        """
+        change _no_instance handling
+        """
+        if pred_class_logits.numel() == 0:
+            return pred_class_logits.new_zeros([1])[0]
+
+        if self.ignore_zero_cats and (self.freq_weight is not None):
+            zero_weight = torch.cat([
+                (self.freq_weight.view(-1) > 1e-4).float(),
+                self.freq_weight.new_ones(1)]) # C + 1
+            loss = F.cross_entropy(
+                pred_class_logits, gt_classes, 
+                weight=zero_weight, reduction="mean")
+        elif self.use_fed_loss and (self.freq_weight is not None): # fedloss
+            C = pred_class_logits.shape[1] - 1
+            appeared = get_fed_loss_inds(
+                gt_classes, 
+                num_sample_cats=self.fed_loss_num_cat,
+                C=C,
+                weight=self.freq_weight)
+            appeared_mask = appeared.new_zeros(C + 1).float()
+            appeared_mask[appeared] = 1. # C + 1
+            appeared_mask[C] = 1.
+            loss = F.cross_entropy(
+                pred_class_logits, gt_classes, 
+                weight=appeared_mask, reduction="mean")        
+        else:
+            loss = F.cross_entropy(
+                pred_class_logits, gt_classes, reduction="mean")                  
+        return loss
+
+
+    def box_reg_loss(
+        self, proposal_boxes, gt_boxes, pred_deltas, gt_classes, 
+        num_classes=-1):
+        """
+        Allow custom background index
+        """
+        num_classes = num_classes if num_classes > 0 else self.num_classes
+        box_dim = proposal_boxes.shape[1]  # 4 or 5
+        fg_inds = nonzero_tuple((gt_classes >= 0) & (gt_classes < num_classes))[0]
+        if pred_deltas.shape[1] == box_dim:  # cls-agnostic regression
+            fg_pred_deltas = pred_deltas[fg_inds]
+        else:
+            fg_pred_deltas = pred_deltas.view(-1, self.num_classes, box_dim)[
+                fg_inds, gt_classes[fg_inds]
+            ]
+        
+        if self.box_reg_loss_type == "smooth_l1":
+            gt_pred_deltas = self.box2box_transform.get_deltas(                      # compute difference between src and target boxes
+                proposal_boxes[fg_inds],                                             # source boxes
+                gt_boxes[fg_inds],                                                   # target boxes
+            )
+            loss_box_reg = smooth_l1_loss(
+                fg_pred_deltas, gt_pred_deltas, self.smooth_l1_beta, reduction="sum"
+            )
+        elif self.box_reg_loss_type == "giou":
+            fg_pred_boxes = self.box2box_transform.apply_deltas(
+                fg_pred_deltas, proposal_boxes[fg_inds]
+            )
+            loss_box_reg = giou_loss(fg_pred_boxes, gt_boxes[fg_inds], reduction="sum")
+        else:
+            raise ValueError(f"Invalid bbox reg loss type '{self.box_reg_loss_type}'")
+        return loss_box_reg / max(gt_classes.numel(), 1.0)
+
+    def inference(self, predictions, proposals):
+        """
+        enable use proposal boxes
+        """
+        predictions = (predictions[0], predictions[1])
+        boxes = self.predict_boxes(predictions, proposals)
+        scores = self.predict_probs(predictions, proposals)
+        if self.mult_proposal_score:
+            proposal_scores = [p.get('objectness_logits') for p in proposals]
+            scores = [(s * ps[:, None]) ** 0.5 \
+                for s, ps in zip(scores, proposal_scores)]
+        image_shapes = [x.image_size for x in proposals]
+        return fast_rcnn_inference(
+            boxes,
+            scores,
+            image_shapes,
+            self.test_score_thresh,
+            self.test_nms_thresh,
+            self.test_topk_per_image,
+        )
+
+    def predict_probs(self, predictions, proposals):
+        """
+        support sigmoid
+        """
+        scores = predictions[0]                        # 512 x 20  (512 here is the number of proposals)
+        num_inst_per_image = [len(p) for p in proposals]    # 512 (num proposals per image)
+        if self.use_sigmoid_ce:
+            probs = scores.sigmoid()
+        else:
+            probs = F.softmax(scores, dim=-1)
+        return probs.split(num_inst_per_image, dim=0)
+
+
+    def image_label_losses(self, predictions, proposals, image_labels, \
+        classifier_info=(None,None,None), ann_type='image'):
+        '''
+        Inputs:
+            scores: N x (C + 1)
+            image_labels B x 1
+        '''
+        num_inst_per_image = [len(p) for p in proposals]
+        scores = predictions[0]
+        scores = scores.split(num_inst_per_image, dim=0) # B x n x (C + 1)
+        if self.with_softmax_prop:
+            prop_scores = predictions[2].split(num_inst_per_image, dim=0)
+        else:
+            prop_scores = [None for _ in num_inst_per_image]
+        B = len(scores)
+        img_box_count = 0
+        select_size_count = 0
+        select_x_count = 0
+        select_y_count = 0
+        max_score_count = 0
+        storage = get_event_storage()
+        loss = scores[0].new_zeros([1])[0]
+        caption_loss = scores[0].new_zeros([1])[0]
+        for idx, (score, labels, prop_score, p) in enumerate(zip(
+            scores, image_labels, prop_scores, proposals)):
+            if score.shape[0] == 0:
+                loss += score.new_zeros([1])[0]
+                continue
+            if 'caption' in ann_type:
+                score, caption_loss_img = self._caption_loss(
+                    score, classifier_info, idx, B)
+                caption_loss += self.caption_weight * caption_loss_img
+                if ann_type == 'caption':
+                    continue
+
+            if self.debug:
+                p.selected = score.new_zeros(
+                    (len(p),), dtype=torch.long) - 1
+            for i_l, label in enumerate(labels):
+                if self.dynamic_classifier:
+                    if idx == 0 and i_l == 0 and comm.is_main_process():
+                        storage.put_scalar('stats_label', label)
+                    label = classifier_info[1][1][label]
+                    assert label < score.shape[1]
+                if self.image_label_loss in ['wsod', 'wsddn']: 
+                    loss_i, ind = self._wsddn_loss(score, prop_score, label)
+                elif self.image_label_loss == 'max_score':
+                    loss_i, ind = self._max_score_loss(score, label)
+                elif self.image_label_loss == 'max_size':
+                    loss_i, ind = self._max_size_loss(score, label, p)
+                elif self.image_label_loss == 'first':
+                    loss_i, ind = self._first_loss(score, label)
+                elif self.image_label_loss == 'image':
+                    loss_i, ind = self._image_loss(score, label)
+                elif self.image_label_loss == 'min_loss':
+                    loss_i, ind = self._min_loss_loss(score, label)
+                else:
+                    assert 0
+                loss += loss_i / len(labels)
+                if type(ind) == type([]):
+                    img_box_count = sum(ind) / len(ind)
+                    if self.debug:
+                        for ind_i in ind:
+                            p.selected[ind_i] = label
+                else:
+                    img_box_count = ind
+                    select_size_count = p[ind].proposal_boxes.area() / \
+                        (p.image_size[0] * p.image_size[1])
+                    max_score_count = score[ind, label].sigmoid()
+                    select_x_count = (p.proposal_boxes.tensor[ind, 0] + \
+                        p.proposal_boxes.tensor[ind, 2]) / 2 / p.image_size[1]
+                    select_y_count = (p.proposal_boxes.tensor[ind, 1] + \
+                        p.proposal_boxes.tensor[ind, 3]) / 2 / p.image_size[0]
+                    if self.debug:
+                        p.selected[ind] = label
+
+        loss = loss / B
+        storage.put_scalar('stats_l_image', loss.item())
+        if 'caption' in ann_type:
+            caption_loss = caption_loss / B
+            loss = loss + caption_loss
+            storage.put_scalar('stats_l_caption', caption_loss.item())
+        if comm.is_main_process():
+            storage.put_scalar('pool_stats', img_box_count)
+            storage.put_scalar('stats_select_size', select_size_count)
+            storage.put_scalar('stats_select_x', select_x_count)
+            storage.put_scalar('stats_select_y', select_y_count)
+            storage.put_scalar('stats_max_label_score', max_score_count)
+
+        return {
+            'image_loss': loss * self.image_loss_weight,
+            'loss_cls': score.new_zeros([1])[0],
+            'loss_box_reg': score.new_zeros([1])[0]}
+
+
+    def forward(self, x, classifier_info=(None,None,None)):            # clip embeddings used here
+        """
+        enable classifier_info
+        """
+
+        if x.dim() > 2:
+            x = torch.flatten(x, start_dim=1)
+        scores = []
+
+        if classifier_info[0] is not None:                                          # classifier_info = cls_features, cls_inds, caption_features  
+            if self.dynamic_classifier and self.all_ann_file is not None:
+                cls_scores,_ = self.cls_score(x, classifier=(classifier_info[0],classifier_info[1]), new_fedloss_mode=True)
+            else:
+                cls_scores,_ = self.cls_score(x, classifier=classifier_info[0])
+            scores.append(cls_scores)
+
+        elif classifier_info[0] is None and self.use_zeroshot_cls is False:
+            cls_scores = self.cls_score(x)                                     ## get scores by multiplying image embedding with normalized clip embedding (returns Bxnum_classes+1)
+            scores.append(cls_scores)
+        else:
+            cls_scores, x_embedding = self.cls_score(x)                                     ## get scores by multiplying image embedding with normalized clip embedding (returns Bxnum_classes+1)
+            scores.append(cls_scores)
+
+        if classifier_info[2] is not None:
+            cap_cls = classifier_info[2]
+            if self.sync_caption_batch:
+                caption_scores = self.cls_score(x, classifier=cap_cls[:, :-1]) 
+            else:
+                caption_scores = self.cls_score(x, classifier=cap_cls)
+            scores.append(caption_scores)
+        
+        scores = torch.cat(scores, dim=1) # B x C' or B x N or B x (C'+N)           # for nuimages, this is 256 x 20 (i.e  19+1)
+        proposal_deltas = self.bbox_pred(x)   #  self.bbox_pred = nn.Sequential(
+                                            #     nn.Linear(input_size, input_size),
+                                            #     nn.ReLU(inplace=True),
+                                            #     nn.Linear(input_size, 4)
+                                            # )
+        if self.with_softmax_prop:                                        # false by default
+            prop_score = self.prop_score(x)
+            return scores, proposal_deltas, prop_score
+        elif classifier_info[0] is None and self.use_zeroshot_cls:                                   # in inference only
+            return scores, proposal_deltas, x_embedding
+        else: 
+            return scores, proposal_deltas
+
+
+    def _caption_loss(self, score, classifier_info, idx, B):
+        assert (classifier_info[2] is not None)
+        assert self.add_image_box
+        cls_and_cap_num = score.shape[1]
+        cap_num = classifier_info[2].shape[0]
+        score, caption_score = score.split(
+            [cls_and_cap_num - cap_num, cap_num], dim=1)
+        # n x (C + 1), n x B
+        caption_score = caption_score[-1:] # 1 x B # -1: image level box
+        caption_target = caption_score.new_zeros(
+            caption_score.shape) # 1 x B or 1 x MB, M: num machines
+        if self.sync_caption_batch:
+            # caption_target: 1 x MB
+            rank = comm.get_rank()
+            global_idx = B * rank + idx
+            assert (classifier_info[2][
+                global_idx, -1] - rank) ** 2 < 1e-8, \
+                    '{} {} {} {} {}'.format(
+                        rank, global_idx, 
+                        classifier_info[2][global_idx, -1],
+                        classifier_info[2].shape, 
+                        classifier_info[2][:, -1])
+            caption_target[:, global_idx] = 1.
+        else:
+            assert caption_score.shape[1] == B
+            caption_target[:, idx] = 1.
+        caption_loss_img = F.binary_cross_entropy_with_logits(
+                caption_score, caption_target, reduction='none')
+        if self.sync_caption_batch:
+            fg_mask = (caption_target > 0.5).float()
+            assert (fg_mask.sum().item() - 1.) ** 2 < 1e-8, '{} {}'.format(
+                fg_mask.shape, fg_mask)
+            pos_loss = (caption_loss_img * fg_mask).sum()
+            neg_loss = (caption_loss_img * (1. - fg_mask)).sum()
+            caption_loss_img = pos_loss + self.neg_cap_weight * neg_loss
+        else:
+            caption_loss_img = caption_loss_img.sum()
+        return score, caption_loss_img
+
+
+    def _wsddn_loss(self, score, prop_score, label):
+        assert prop_score is not None
+        loss = 0
+        final_score = score.sigmoid() * \
+            F.softmax(prop_score, dim=0) # B x (C + 1)
+        img_score = torch.clamp(
+            torch.sum(final_score, dim=0), 
+            min=1e-10, max=1-1e-10) # (C + 1)
+        target = img_score.new_zeros(img_score.shape) # (C + 1)
+        target[label] = 1.
+        loss += F.binary_cross_entropy(img_score, target)
+        ind = final_score[:, label].argmax()
+        return loss, ind
+
+
+    def _max_score_loss(self, score, label):
+        loss = 0
+        target = score.new_zeros(score.shape[1])
+        target[label] = 1.
+        ind = score[:, label].argmax().item()
+        loss += F.binary_cross_entropy_with_logits(
+            score[ind], target, reduction='sum')
+        return loss, ind
+
+
+    def _min_loss_loss(self, score, label):
+        loss = 0
+        target = score.new_zeros(score.shape)
+        target[:, label] = 1.
+        with torch.no_grad():
+            x = F.binary_cross_entropy_with_logits(
+                score, target, reduction='none').sum(dim=1) # n
+        ind = x.argmin().item()
+        loss += F.binary_cross_entropy_with_logits(
+            score[ind], target[0], reduction='sum')
+        return loss, ind
+
+
+    def _first_loss(self, score, label):
+        loss = 0
+        target = score.new_zeros(score.shape[1])
+        target[label] = 1.
+        ind = 0
+        loss += F.binary_cross_entropy_with_logits(
+            score[ind], target, reduction='sum')
+        return loss, ind
+
+
+    def _image_loss(self, score, label):
+        assert self.add_image_box
+        target = score.new_zeros(score.shape[1])
+        target[label] = 1.
+        ind = score.shape[0] - 1
+        loss = F.binary_cross_entropy_with_logits(
+            score[ind], target, reduction='sum')
+        return loss, ind
+
+
+    def _max_size_loss(self, score, label, p):
+        loss = 0
+        target = score.new_zeros(score.shape[1])
+        target[label] = 1.
+        sizes = p.proposal_boxes.area()
+        ind = sizes[:-1].argmax().item() if len(sizes) > 1 else 0
+        if self.softmax_weak_loss:
+            loss += F.cross_entropy(
+                score[ind:ind+1], 
+                score.new_tensor(label, dtype=torch.long).view(1), 
+                reduction='sum')
+        else:
+            loss += F.binary_cross_entropy_with_logits(
+                score[ind], target, reduction='sum')
+        return loss, ind
+
+
+
+def put_label_distribution(storage, hist_name, hist_counts, num_classes):
+    """
+    """
+    ht_min, ht_max = 0, num_classes
+    hist_edges = torch.linspace(
+        start=ht_min, end=ht_max, steps=num_classes + 1, dtype=torch.float32)
+
+    hist_params = dict(
+        tag=hist_name,
+        min=ht_min,
+        max=ht_max,
+        num=float(hist_counts.sum()),
+        sum=float((hist_counts * torch.arange(len(hist_counts))).sum()),
+        sum_squares=float(((hist_counts * torch.arange(len(hist_counts))) ** 2).sum()),
+        bucket_limits=hist_edges[1:].tolist(),
+        bucket_counts=hist_counts.tolist(),
+        global_step=storage._iter,
+    )
+    storage._histograms.append(hist_params)
