@@ -57,4 +57,22 @@ class VisualizationDemo(object):
             classifier = BUILDIN_CLASSIFIER[args.vocabulary]
         num_classes = len(self.metadata.thing_classes)
         self.cpu_device = torch.device("cpu")
-        self.instance_mode = instance
+        self.instance_mode = instance_mode
+
+        self.parallel = parallel
+        if parallel:
+            num_gpu = torch.cuda.device_count()
+            self.predictor = AsyncPredictor(cfg, num_gpus=num_gpu)
+        else:
+            self.predictor = DefaultPredictor(cfg)
+        reset_cls_test(self.predictor.model, classifier, num_classes)
+
+    def run_on_image(self, image):
+        """
+        Args:
+            image (np.ndarray): an image of shape (H, W, C) (in BGR order).
+                This is the format used by OpenCV.
+
+        Returns:
+            predictions (dict): the output of the model.
+            vis_output (VisImage): the visu
