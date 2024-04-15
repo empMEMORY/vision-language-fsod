@@ -176,3 +176,111 @@ class DeticCascadeROIHeads(CascadeROIHeads):
         '''
         enable debug and image labels
         classifier_info is shared across the batch
+        '''
+        if self.training:
+            if ann_type in ['box', 'prop', 'proptag']:
+                #Prepare some proposals to be used to train the ROI heads. It performs box matching between `proposals` and `targets`, and assigns
+                # training labels to the proposals.
+                proposals = self.label_and_sample_proposals(             
+                    proposals, targets)
+            else:
+                proposals = self.get_top_proposals(proposals)
+            
+            losses = self._forward_box(features, proposals, targets, \
+                ann_type=ann_type, classifier_info=classifier_info, file_names=file_names, valmode=valmode)
+            if ann_type == 'box' and targets[0].has('gt_masks'):
+                mask_losses = self._forward_mask(features, proposals)
+                losses.update({k: v * self.mask_weight \
+                    for k, v in mask_losses.items()})
+                losses.update(self._forward_keypoint(features, proposals))
+            else:
+                losses.update(self._get_empty_mask_loss(
+                    features, proposals,
+                    device=proposals[0].objectness_logits.device))
+            return proposals, losses
+        
+        # when doing inference
+        pred_instances = self._forward_box(
+            features, proposals, classifier_info=classifier_info, file_names=file_names)
+        
+        pred_instances = self.forward_with_given_boxes(features, pred_instances)
+        return pred_instances, {}
+
+
+    def get_top_proposals(self, proposals):
+        for i in range(len(proposals)):
+            proposals[i].proposal_boxes.clip(proposals[i].image_size)
+        proposals = [p[:self.ws_num_props] for p in proposals]
+        for i, p in enumerate(proposals):
+            p.proposal_boxes.tensor = p.proposal_boxes.tensor.detach()
+            if self.add_image_box:
+                proposals[i] = self._add_image_box(p)
+        return proposals
+
+
+    def _add_image_box(self, p):
+        image_box = Instances(p.image_size)
+        n = 1
+        h, w = p.image_size
+        f = self.image_box_size
+        image_box.proposal_boxes = Boxes(
+            p.proposal_boxes.tensor.new_tensor(
+                [w * (1. - f) / 2., 
+                    h * (1. - f) / 2.,
+                    w * (1. - (1. - f) / 2.), 
+                    h * (1. - (1. - f) / 2.)]
+                ).view(n, 4))
+        image_box.objectness_logits = p.objectness_logits.new_ones(n)
+        return Instances.cat([p, image_box])
+
+
+    def _get_empty_mask_loss(self, features, proposals, device):
+        if self.mask_on:
+            return {'loss_mask': torch.zeros(
+                (1, ), device=device, dtype=torch.float32)[0]}
+        else:
+            return {}
+
+
+    def _create_proposals_from_boxes(self, boxes, image_sizes, logits, gt_classes=None):
+        """
+        Add objectness_logits
+        """
+        boxes = [Boxes(b.detach()) for b in boxes]
+        proposals = []
+        for boxes_per_image, image_size, logit in zip(
+            boxes, image_sizes, logits):
+            boxes_per_image.clip(image_size)
+            if self.training:
+                inds = boxes_per_image.nonempty()
+                boxes_per_image = boxes_per_image[inds]
+                logit = logit[inds]
+            prop = Instances(image_size)
+            prop.proposal_boxes = boxes_per_image
+            prop.objectness_logits = logit
+            if gt_classes is not None:
+                prop.gt_classes = gt_classes
+            proposals.append(prop)
+        return proposals
+
+
+    def _run_stage(self, features, proposals, stage, 
+        classifier_info=(None,None,None), file_names=None):
+        """
+        Support classifier_info and add_feature_to_prop
+        """
+        pool_boxes = [x.proposal_boxes for x in proposals]    # 256 x 4 (proposals x xywh)
+        box_features = self.box_pooler(features, pool_boxes)  # 256 x 256 x7 x7 (proposals x features/channels x height x width)
+        box_features = _ScaleGradient.apply(box_features, 1.0 / self.num_cascade_stages)
+        box_features = self.box_head[stage](box_features)     # 256 x 1024 (proposals x feature dim)
+
+        if self.add_feature_to_prop:
+            feats_per_image = box_features.split(
+                [len(p) for p in proposals], dim=0)
+            for feat, p in zip(feats_per_image, proposals):
+                p.feat = feat
+
+        # box_predictor call leads to detic_fast_rcnn.py file
+        return self.box_predictor[stage](                                   # this call uses classifier_info which further uses clip embeddings
+            box_features, 
+            classifier_info=classifier_info), box_features          # classifier_info[1] or the fed loss cls inds are not used in the forward() method for this function.
