@@ -46,4 +46,15 @@ class VisualizationDemo(object):
             parallel (bool): whether to run the model in different processes from visualization.
                 Useful since the visualization logic can be slow.
         """
-        if args.vocabula
+        if args.vocabulary == 'custom':
+            self.metadata = MetadataCatalog.get("__unused")
+            print(args.custom_vocabulary)
+            self.metadata.thing_classes = args.custom_vocabulary.split(',')
+            classifier = get_clip_embeddings(self.metadata.thing_classes)
+        else:
+            self.metadata = MetadataCatalog.get(
+                BUILDIN_METADATA_PATH[args.vocabulary])
+            classifier = BUILDIN_CLASSIFIER[args.vocabulary]
+        num_classes = len(self.metadata.thing_classes)
+        self.cpu_device = torch.device("cpu")
+        self.instance_mode = instance
