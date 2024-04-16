@@ -87,4 +87,17 @@ class VisualizationDemo(object):
             vis_output = visualizer.draw_panoptic_seg_predictions(
                 panoptic_seg.to(self.cpu_device), segments_info
             )
-       
+        else:
+            if "sem_seg" in predictions:
+                vis_output = visualizer.draw_sem_seg(
+                    predictions["sem_seg"].argmax(dim=0).to(self.cpu_device)
+                )
+        if "instances" in predictions:
+            instances = predictions["instances"].to(self.cpu_device)
+            vis_output = visualizer.draw_instance_predictions(predictions=instances)
+        return predictions, vis_output
+    
+    def run_on_image_no_viz(self, image):
+        """
+        Args:
+            image (np.ndarray): an image of shape (H, W, C) (in BGR order
