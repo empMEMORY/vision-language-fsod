@@ -100,4 +100,26 @@ class VisualizationDemo(object):
     def run_on_image_no_viz(self, image):
         """
         Args:
-            image (np.ndarray): an image of shape (H, W, C) (in BGR order
+            image (np.ndarray): an image of shape (H, W, C) (in BGR order).
+                This is the format used by OpenCV.
+
+        Returns:
+            predictions (dict): the output of the model.
+            vis_output (VisImage): the visualized image output.
+        """
+        vis_output = None
+        predictions = self.predictor(image)
+
+        return predictions, vis_output
+
+    def _frame_from_video(self, video):
+        while video.isOpened():
+            success, frame = video.read()
+            if success:
+                yield frame
+            else:
+                break
+
+    def run_on_video(self, video):
+        """
+        Visualize
