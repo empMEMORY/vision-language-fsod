@@ -145,4 +145,22 @@ class VisualizationDemo(object):
                 vis_frame = video_visualizer.draw_instance_predictions(frame, predictions)
             elif "sem_seg" in predictions:
                 vis_frame = video_visualizer.draw_sem_seg(
-                    frame, predictions["sem_seg"].argmax(dim=0)
+                    frame, predictions["sem_seg"].argmax(dim=0).to(self.cpu_device)
+                )
+
+            # Converts Matplotlib RGB format to OpenCV BGR format
+            vis_frame = cv2.cvtColor(vis_frame.get_image(), cv2.COLOR_RGB2BGR)
+            return vis_frame
+
+        frame_gen = self._frame_from_video(video)
+        if self.parallel:
+            buffer_size = self.predictor.default_buffer_size
+
+            frame_data = deque()
+
+            for cnt, frame in enumerate(frame_gen):
+                frame_data.append(frame)
+                self.predictor.put(frame)
+
+                if cnt >= buffer_size:
+                    f
