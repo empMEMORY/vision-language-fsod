@@ -233,4 +233,19 @@ class AsyncPredictor:
 
     def put(self, image):
         self.put_idx += 1
-        self.task_queue.put((self.put_id
+        self.task_queue.put((self.put_idx, image))
+
+    def get(self):
+        self.get_idx += 1  # the index needed for this request
+        if len(self.result_rank) and self.result_rank[0] == self.get_idx:
+            res = self.result_data[0]
+            del self.result_data[0], self.result_rank[0]
+            return res
+
+        while True:
+            # make sure the results are returned in the correct order
+            idx, res = self.result_queue.get()
+            if idx == self.get_idx:
+                return res
+            insert = bisect.bisect(self.result_rank, idx)
+            self.resu
