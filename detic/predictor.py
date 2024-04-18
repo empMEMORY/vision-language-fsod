@@ -163,4 +163,20 @@ class VisualizationDemo(object):
                 self.predictor.put(frame)
 
                 if cnt >= buffer_size:
-                    f
+                    frame = frame_data.popleft()
+                    predictions = self.predictor.get()
+                    yield process_predictions(frame, predictions)
+
+            while len(frame_data):
+                frame = frame_data.popleft()
+                predictions = self.predictor.get()
+                yield process_predictions(frame, predictions)
+        else:
+            for frame in frame_gen:
+                yield process_predictions(frame, self.predictor(frame))
+
+
+class AsyncPredictor:
+    """
+    A predictor that runs the model asynchronously, possibly on >1 GPUs.
+    Because r
