@@ -136,4 +136,13 @@ class VisualizationDemo(object):
         def process_predictions(frame, predictions):
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             if "panoptic_seg" in predictions:
-                panoptic_seg, segments_info = prediction
+                panoptic_seg, segments_info = predictions["panoptic_seg"]
+                vis_frame = video_visualizer.draw_panoptic_seg_predictions(
+                    frame, panoptic_seg.to(self.cpu_device), segments_info
+                )
+            elif "instances" in predictions:
+                predictions = predictions["instances"].to(self.cpu_device)
+                vis_frame = video_visualizer.draw_instance_predictions(frame, predictions)
+            elif "sem_seg" in predictions:
+                vis_frame = video_visualizer.draw_sem_seg(
+                    frame, predictions["sem_seg"].argmax(dim=0)
