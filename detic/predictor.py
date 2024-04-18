@@ -248,4 +248,20 @@ class AsyncPredictor:
             if idx == self.get_idx:
                 return res
             insert = bisect.bisect(self.result_rank, idx)
-            self.resu
+            self.result_rank.insert(insert, idx)
+            self.result_data.insert(insert, res)
+
+    def __len__(self):
+        return self.put_idx - self.get_idx
+
+    def __call__(self, image):
+        self.put(image)
+        return self.get()
+
+    def shutdown(self):
+        for _ in self.procs:
+            self.task_queue.put(AsyncPredictor._StopToken())
+
+    @property
+    def default_buffer_size(self):
+        return len(self.procs) * 5
