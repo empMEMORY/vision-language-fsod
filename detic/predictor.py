@@ -198,4 +198,20 @@ class AsyncPredictor:
 
             while True:
                 task = self.task_queue.get()
-            
+                if isinstance(task, AsyncPredictor._StopToken):
+                    break
+                idx, data = task
+                result = predictor(data)
+                self.result_queue.put((idx, result))
+
+    def __init__(self, cfg, num_gpus: int = 1):
+        """
+        Args:
+            cfg (CfgNode):
+            num_gpus (int): if 0, will run on CPU
+        """
+        num_workers = max(num_gpus, 1)
+        self.task_queue = mp.Queue(maxsize=num_workers * 3)
+        self.result_queue = mp.Queue(maxsize=num_workers * 3)
+        self.procs = []
+        for gpuid in range(max(num_gpus, 
