@@ -179,4 +179,23 @@ class VisualizationDemo(object):
 class AsyncPredictor:
     """
     A predictor that runs the model asynchronously, possibly on >1 GPUs.
-    Because r
+    Because rendering the visualization takes considerably amount of time,
+    this helps improve throughput a little bit when rendering videos.
+    """
+
+    class _StopToken:
+        pass
+
+    class _PredictWorker(mp.Process):
+        def __init__(self, cfg, task_queue, result_queue):
+            self.cfg = cfg
+            self.task_queue = task_queue
+            self.result_queue = result_queue
+            super().__init__()
+
+        def run(self):
+            predictor = DefaultPredictor(self.cfg)
+
+            while True:
+                task = self.task_queue.get()
+            
