@@ -214,4 +214,23 @@ class AsyncPredictor:
         self.task_queue = mp.Queue(maxsize=num_workers * 3)
         self.result_queue = mp.Queue(maxsize=num_workers * 3)
         self.procs = []
-        for gpuid in range(max(num_gpus, 
+        for gpuid in range(max(num_gpus, 1)):
+            cfg = cfg.clone()
+            cfg.defrost()
+            cfg.MODEL.DEVICE = "cuda:{}".format(gpuid) if num_gpus > 0 else "cpu"
+            self.procs.append(
+                AsyncPredictor._PredictWorker(cfg, self.task_queue, self.result_queue)
+            )
+
+        self.put_idx = 0
+        self.get_idx = 0
+        self.result_rank = []
+        self.result_data = []
+
+        for p in self.procs:
+            p.start()
+        atexit.register(self.shutdown)
+
+    def put(self, image):
+        self.put_idx += 1
+        self.task_queue.put((self.put_id
