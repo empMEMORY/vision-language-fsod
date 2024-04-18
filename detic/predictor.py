@@ -122,4 +122,18 @@ class VisualizationDemo(object):
 
     def run_on_video(self, video):
         """
-        Visualize
+        Visualizes predictions on frames of the input video.
+
+        Args:
+            video (cv2.VideoCapture): a :class:`VideoCapture` object, whose source can be
+                either a webcam or a video file.
+
+        Yields:
+            ndarray: BGR visualizations of each video frame.
+        """
+        video_visualizer = VideoVisualizer(self.metadata, self.instance_mode)
+
+        def process_predictions(frame, predictions):
+            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            if "panoptic_seg" in predictions:
+                panoptic_seg, segments_info = prediction
