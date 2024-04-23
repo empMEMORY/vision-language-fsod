@@ -56,4 +56,19 @@ if __name__ == '__main__':
         for k, v in in_data.items():
             print('imagenet', k, len(v))
         print('Saving Imagenet to', in_out_path)
-     
+        json.dump(in_data, open(in_out_path, 'w'))
+    
+    if not args.not_save_lvis:
+        lvis_out_path = args.lvis_path[:-5] + '_{}.json'.format(args.mark)
+        for k, v in lvis_data.items():
+            print('lvis', k, len(v))
+        print('Saving LVIS to', lvis_out_path)
+        json.dump(lvis_data, open(lvis_out_path, 'w'))
+
+    if args.save_categories != '':
+        for x in categories:
+            for k in ['image_count', 'instance_count', 'synonyms', 'def']:
+                if k in x:
+                    del x[k]
+        CATEGORIES = repr(categories) + "  # noqa"
+        o
