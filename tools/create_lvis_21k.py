@@ -24,4 +24,21 @@ if __name__ == '__main__':
     name2id = {x['name']: x['id'] for x in categories}
     in_id_map = {}
     for x in in_data['categories']:
-        if x['synset']
+        if x['synset'] in synset2id:
+            in_id_map[x['id']] = synset2id[x['synset']]
+        elif x['name'] in name2id:
+            in_id_map[x['id']] = name2id[x['name']]
+            x['id'] = name2id[x['name']]
+        else:
+            cat_count = cat_count + 1
+            name2id[x['name']] = cat_count
+            in_id_map[x['id']] = cat_count
+            x['id'] = cat_count
+            categories.append(x)
+    
+    print('lvis cats', len(lvis_data['categories']))
+    print('imagenet cats', len(in_data['categories']))
+    print('merge cats', len(categories))
+
+    filtered_images = []
+    for x in in_data['images']:
