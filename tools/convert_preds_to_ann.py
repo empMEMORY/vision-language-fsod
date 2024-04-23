@@ -21,4 +21,15 @@ if __name__ == '__main__':
     preds = torch.load(args.pred_path_train)
     if args.train_and_val:
         val_preds = torch.load(args.pred_path_val)
-        preds.extend(val_pr
+        preds.extend(val_preds)
+    train_dataset_name = args.dataset_name
+
+    if args.train_and_val:
+        save_path = os.path.join(os.path.dirname(args.pred_path_train), f'trainval_preds_coco_fmt_conf_thresh_{args.conf_thresh}.json')
+    else:
+        save_path = os.path.join(os.path.dirname(args.pred_path_train), f'train_preds_coco_fmt_conf_thresh_{args.conf_thresh}.json')
+        
+    preds_coco_ann_fmt = convert_to_coco_dict_with_preds(train_dataset_name, preds, conf_thresh=float(args.conf_thresh), trainval=args.train_and_val) # switch to true if both train and val
+
+    with open(save_path, 'w') as f:
+        json.dump(preds
