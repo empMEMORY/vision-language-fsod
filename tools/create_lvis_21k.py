@@ -42,3 +42,18 @@ if __name__ == '__main__':
 
     filtered_images = []
     for x in in_data['images']:
+        x['pos_category_ids'] = [in_id_map[xx] for xx in x['pos_category_ids']]
+        x['pos_category_ids'] = [xx for xx in \
+            sorted(set(x['pos_category_ids'])) if xx >= 0]
+        if len(x['pos_category_ids']) > 0:
+            filtered_images.append(x)
+
+    in_data['categories'] = categories
+    lvis_data['categories'] = categories
+
+    if not args.not_save_imagenet:
+        in_out_path = args.imagenet_path[:-5] + '_{}.json'.format(args.mark)
+        for k, v in in_data.items():
+            print('imagenet', k, len(v))
+        print('Saving Imagenet to', in_out_path)
+     
