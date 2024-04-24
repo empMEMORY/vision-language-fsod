@@ -13,4 +13,6 @@ if __name__ == '__main__':
     print('Loading', args.data_path)
     data = json.load(open(args.data_path, 'r'))
     data['categories'] = cat
-    out
+    out_path = args.data_path[:-5] + '_oriorder.json'
+    print('Saving to', out_path)
+    json.dump(data, open(out_path, 'w'))
