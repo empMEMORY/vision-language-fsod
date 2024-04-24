@@ -71,4 +71,4 @@ if __name__ == '__main__':
                 if k in x:
                     del x[k]
         CATEGORIES = repr(categories) + "  # noqa"
-        o
+        open(args.save_categories, 'wt').write(f"CATEGORIES = {CATEGORIES}")
