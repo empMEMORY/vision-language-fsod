@@ -45,4 +45,23 @@ if __name__ == '__main__':
             'id': i + 1,
             'synset': synset.name(),
             'name': synonyms[0],
-            'def': synset.de
+            'def': synset.definition(),
+            'synonyms': synonyms,
+        }
+        categories.append(category)
+    print('categories', len(categories))
+
+    data_loader = torch.utils.data.DataLoader(
+        dataset, batch_size=1, shuffle=False,
+        num_workers=args.workers,
+        collate_fn=operator.itemgetter(0),
+    )
+    images = []
+    for img, label, index in tqdm(data_loader):
+        if label == -1:
+            continue
+        image = {
+            'id': int(index) + 1,
+            'pos_category_ids': [int(label) + 1],
+            'height': int(img.height),
+            'w
