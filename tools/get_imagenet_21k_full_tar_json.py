@@ -64,4 +64,18 @@ if __name__ == '__main__':
             'id': int(index) + 1,
             'pos_category_ids': [int(label) + 1],
             'height': int(img.height),
-            'w
+            'width': int(img.width),
+            'tar_index': int(index),
+        }
+        images.append(image)
+    
+    data = {'categories': categories, 'images': images, 'annotations': []}
+    try:
+        for k, v in data.items():
+            print(k, len(v))
+        print('Saving to ', args.out_path)
+        json.dump(data, open(args.out_path, 'w'))
+    except:
+        pass
+    import pdb; pdb.set_trace()
+    
