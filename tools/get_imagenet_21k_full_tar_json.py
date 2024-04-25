@@ -28,4 +28,21 @@ if __name__ == '__main__':
 
     start_time = time.time()
     print('Building dataset')
-    dataset = DiskTarDataset(args.tarfile_path, args.tar_i
+    dataset = DiskTarDataset(args.tarfile_path, args.tar_index_dir)
+    end_time = time.time()
+    print(f"Took {end_time-start_time} seconds to make the dataset.")
+    print(f"Have {len(dataset)} samples.")
+    print('dataset', dataset)
+    
+
+    tar_files = np.load(args.tarfile_path)
+    categories = []
+    for i, tar_file in enumerate(tar_files):
+        wnid = tar_file[-13:-4]
+        synset = wordnet.synset_from_pos_and_offset('n', int(wnid[1:]))
+        synonyms = [x.name() for x in synset.lemmas()]
+        category = {
+            'id': i + 1,
+            'synset': synset.name(),
+            'name': synonyms[0],
+            'def': synset.de
