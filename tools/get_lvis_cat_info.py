@@ -35,4 +35,11 @@ if __name__ == '__main__':
     # ann_counts = sorted([x['instance_count'] for x in cats])
     # print('image count', image_counts)
     # import pdb; pdb.set_trace()
-    if args
+    if args.add_freq:
+        for x in ['r', 'c', 'f']:
+            print(x, num_freqs[x])
+    out = cats # {'categories': cats}
+    out_path = args.ann[:-5] + '_cat_info.json'
+    print('Saving to', out_path)
+    json.dump(out, open(out_path, 'w'))
+    
