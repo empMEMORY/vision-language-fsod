@@ -60,4 +60,16 @@ COCO_SYNSET_CATEGORIES = [
     {"synset": "surfboard.n.01", "coco_cat_id": 42},
     {"synset": "tennis_racket.n.01", "coco_cat_id": 43},
     {"synset": "bottle.n.01", "coco_cat_id": 44},
-    {"synset": "wineglass.
+    {"synset": "wineglass.n.01", "coco_cat_id": 46},
+    {"synset": "cup.n.01", "coco_cat_id": 47},
+    {"synset": "fork.n.01", "coco_cat_id": 48},
+    {"synset": "knife.n.01", "coco_cat_id": 49},
+    {"synset": "spoon.n.01", "coco_cat_id": 50},
+    {"synset": "bowl.n.03", "coco_cat_id": 51},
+    {"synset": "banana.n.02", "coco_cat_id": 52},
+    {"synset": "apple.n.01", "coco_cat_id": 53},
+    {"synset": "sandwich.n.01", "coco_cat_id": 54},
+    {"synset": "orange.n.01", "coco_cat_id": 55},
+    {"synset": "broccoli.n.01", "coco_cat_id": 56},
+    {"synset": "carrot.n.01", "coco_cat_id": 57},
+    # {"synset": "fran
