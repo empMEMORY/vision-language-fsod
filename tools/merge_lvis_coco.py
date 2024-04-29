@@ -48,4 +48,16 @@ COCO_SYNSET_CATEGORIES = [
     {"synset": "umbrella.n.01", "coco_cat_id": 28},
     {"synset": "bag.n.04", "coco_cat_id": 31},
     {"synset": "necktie.n.01", "coco_cat_id": 32},
-    {"synset": "bag.n.06", "coco_cat_id": 3
+    {"synset": "bag.n.06", "coco_cat_id": 33},
+    {"synset": "frisbee.n.01", "coco_cat_id": 34},
+    {"synset": "ski.n.01", "coco_cat_id": 35},
+    {"synset": "snowboard.n.01", "coco_cat_id": 36},
+    {"synset": "ball.n.06", "coco_cat_id": 37},
+    {"synset": "kite.n.03", "coco_cat_id": 38},
+    {"synset": "baseball_bat.n.01", "coco_cat_id": 39},
+    {"synset": "baseball_glove.n.01", "coco_cat_id": 40},
+    {"synset": "skateboard.n.01", "coco_cat_id": 41},
+    {"synset": "surfboard.n.01", "coco_cat_id": 42},
+    {"synset": "tennis_racket.n.01", "coco_cat_id": 43},
+    {"synset": "bottle.n.01", "coco_cat_id": 44},
+    {"synset": "wineglass.
