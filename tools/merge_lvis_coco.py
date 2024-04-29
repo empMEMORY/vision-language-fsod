@@ -72,4 +72,16 @@ COCO_SYNSET_CATEGORIES = [
     {"synset": "orange.n.01", "coco_cat_id": 55},
     {"synset": "broccoli.n.01", "coco_cat_id": 56},
     {"synset": "carrot.n.01", "coco_cat_id": 57},
-    # {"synset": "fran
+    # {"synset": "frank.n.02", "coco_cat_id": 58},
+    {"synset": "sausage.n.01", "coco_cat_id": 58},
+    {"synset": "pizza.n.01", "coco_cat_id": 59},
+    {"synset": "doughnut.n.02", "coco_cat_id": 60},
+    {"synset": "cake.n.03", "coco_cat_id": 61},
+    {"synset": "chair.n.01", "coco_cat_id": 62},
+    {"synset": "sofa.n.01", "coco_cat_id": 63},
+    {"synset": "pot.n.04", "coco_cat_id": 64},
+    {"synset": "bed.n.01", "coco_cat_id": 65},
+    {"synset": "dining_table.n.01", "coco_cat_id": 67},
+    {"synset": "toilet.n.02", "coco_cat_id": 70},
+    {"synset": "television_receiver.n.01", "coco_cat_id": 72},
+    {"synset": "laptop.n.01", "coco_cat_id
