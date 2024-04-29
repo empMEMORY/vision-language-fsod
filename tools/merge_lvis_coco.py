@@ -84,4 +84,16 @@ COCO_SYNSET_CATEGORIES = [
     {"synset": "dining_table.n.01", "coco_cat_id": 67},
     {"synset": "toilet.n.02", "coco_cat_id": 70},
     {"synset": "television_receiver.n.01", "coco_cat_id": 72},
-    {"synset": "laptop.n.01", "coco_cat_id
+    {"synset": "laptop.n.01", "coco_cat_id": 73},
+    {"synset": "mouse.n.04", "coco_cat_id": 74},
+    {"synset": "remote_control.n.01", "coco_cat_id": 75},
+    {"synset": "computer_keyboard.n.01", "coco_cat_id": 76},
+    {"synset": "cellular_telephone.n.01", "coco_cat_id": 77},
+    {"synset": "microwave.n.02", "coco_cat_id": 78},
+    {"synset": "oven.n.01", "coco_cat_id": 79},
+    {"synset": "toaster.n.02", "coco_cat_id": 80},
+    {"synset": "sink.n.01", "coco_cat_id": 81},
+    {"synset": "electric_refrigerator.n.01", "coco_cat_id": 82},
+    {"synset": "book.n.01", "coco_cat_id": 84},
+    {"synset": "clock.n.01", "coco_cat_id": 85},
+    {"synse
