@@ -142,4 +142,18 @@ if __name__ == '__main__':
             lvis_image_id = lvis_file2id[file_name]
             lvis_image = lvis_id2img[lvis_image_id]
             lvis_cat_id = coco2lviscats[ann['category_id']]
-            if lvis_cat_id in lvi
+            if lvis_cat_id in lvis_image['neg_category_ids']:
+                continue
+                if DEBUG:
+                    import cv2
+                    img_path = IMG_PATH + file_name
+                    img = cv2.imread(img_path)
+                    print(lvis_catid2name[lvis_cat_id])
+                    print('neg', [lvis_catid2name[x] for x in lvis_image['neg_category_ids']])
+                    cv2.imshow('img', img)
+                    cv2.waitKey()
+            ann['category_id'] = lvis_cat_id
+            ann['image_id'] = lvis_image_id
+            coco_img2anns[file_name].append(ann)
+    
+    lvis_img2anns = defaultdic
