@@ -173,4 +173,17 @@ if __name__ == '__main__':
         )
 
         for ann in lvis_anns:
-       
+            ann_id_count = ann_id_count + 1
+            ann['id'] = ann_id_count
+            anns.append(ann)
+
+        for i, ann in enumerate(coco_anns):
+            if len(ious[i]) == 0 or ious[i].max() < THRESH:
+                ann_id_count = ann_id_count + 1
+                ann['id'] = ann_id_count
+                anns.append(ann)
+            else:
+                duplicated = False
+                for j in range(len(ious[i])):
+                    if ious[i, j] >= THRESH and \
+                        coco_anns[i]['category_id'] == lvis_anns[j]['category_id']
