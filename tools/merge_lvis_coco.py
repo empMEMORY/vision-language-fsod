@@ -129,4 +129,17 @@ if __name__ == '__main__':
     
     lvis_file2id = {x[file_name_key][-16:]: x['id'] for x in lvis_data['images']}
     lvis_id2img = {x['id']: x for x in lvis_data['images']}
-    lvis_catid2name = {x['id']: x['name'] for x in lvis_data['categ
+    lvis_catid2name = {x['id']: x['name'] for x in lvis_data['categories']}
+
+    coco_file2anns = {}
+    coco_id2img = {x['id']: x for x in coco_data['images']}
+    coco_img2anns = defaultdict(list)
+    for ann in coco_data['annotations']:
+        coco_img = coco_id2img[ann['image_id']]
+        file_name = coco_img['file_name'][-16:]
+        if ann['category_id'] in coco2lviscats and \
+            file_name in lvis_file2id:
+            lvis_image_id = lvis_file2id[file_name]
+            lvis_image = lvis_id2img[lvis_image_id]
+            lvis_cat_id = coco2lviscats[ann['category_id']]
+            if lvis_cat_id in lvi
