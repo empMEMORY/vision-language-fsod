@@ -115,4 +115,18 @@ if __name__ == '__main__':
     lvis_data = json.load(open(LVIS_PATH, 'r'))
 
     coco_cats = coco_data['categories']
-    lvis_cats = lvis_data
+    lvis_cats = lvis_data['categories']
+
+    num_find = 0
+    num_not_find = 0
+    num_twice = 0
+    coco2lviscats = {}
+    synset2lvisid = {x['synset']: x['id'] for x in lvis_cats}
+    # cocoid2synset = {x['coco_cat_id']: x['synset'] for x in COCO_SYNSET_CATEGORIES}
+    coco2lviscats = {x['coco_cat_id']: synset2lvisid[x['synset']] \
+        for x in COCO_SYNSET_CATEGORIES if x['synset'] in synset2lvisid}
+    print(len(coco2lviscats))
+    
+    lvis_file2id = {x[file_name_key][-16:]: x['id'] for x in lvis_data['images']}
+    lvis_id2img = {x['id']: x for x in lvis_data['images']}
+    lvis_catid2name = {x['id']: x['name'] for x in lvis_data['categ
