@@ -96,4 +96,23 @@ COCO_SYNSET_CATEGORIES = [
     {"synset": "electric_refrigerator.n.01", "coco_cat_id": 82},
     {"synset": "book.n.01", "coco_cat_id": 84},
     {"synset": "clock.n.01", "coco_cat_id": 85},
-    {"synse
+    {"synset": "vase.n.01", "coco_cat_id": 86},
+    {"synset": "scissors.n.01", "coco_cat_id": 87},
+    {"synset": "teddy.n.01", "coco_cat_id": 88},
+    {"synset": "hand_blower.n.01", "coco_cat_id": 89},
+    {"synset": "toothbrush.n.01", "coco_cat_id": 90},
+]
+
+
+def get_bbox(ann):
+    bbox = ann['bbox']
+    return [bbox[0], bbox[1], bbox[0] + bbox[2], bbox[1] + bbox[3]]
+
+
+if __name__ == '__main__':
+    file_name_key = 'file_name' if 'v0.5' in LVIS_PATH else 'coco_url'
+    coco_data = json.load(open(COCO_PATH, 'r'))
+    lvis_data = json.load(open(LVIS_PATH, 'r'))
+
+    coco_cats = coco_data['categories']
+    lvis_cats = lvis_data
