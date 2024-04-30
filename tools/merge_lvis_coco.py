@@ -156,4 +156,21 @@ if __name__ == '__main__':
             ann['image_id'] = lvis_image_id
             coco_img2anns[file_name].append(ann)
     
-    lvis_img2anns = defaultdic
+    lvis_img2anns = defaultdict(list)
+    for ann in lvis_data['annotations']:
+        lvis_img = lvis_id2img[ann['image_id']]
+        file_name = lvis_img[file_name_key][-16:]
+        lvis_img2anns[file_name].append(ann)
+
+    ann_id_count = 0
+    anns = []
+    for file_name in lvis_img2anns:
+        coco_anns = coco_img2anns[file_name]
+        lvis_anns = lvis_img2anns[file_name]
+        ious = pairwise_iou(
+            Boxes(torch.tensor([get_bbox(x) for x in coco_anns])), 
+            Boxes(torch.tensor([get_bbox(x) for x in lvis_anns]))
+        )
+
+        for ann in lvis_anns:
+       
