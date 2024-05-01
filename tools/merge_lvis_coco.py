@@ -186,4 +186,17 @@ if __name__ == '__main__':
                 duplicated = False
                 for j in range(len(ious[i])):
                     if ious[i, j] >= THRESH and \
-                        coco_anns[i]['category_id'] == lvis_anns[j]['category_id']
+                        coco_anns[i]['category_id'] == lvis_anns[j]['category_id']:
+                        duplicated = True
+                if not duplicated:
+                    ann_id_count = ann_id_count + 1
+                    ann['id'] = ann_id_count
+                    anns.append(ann)
+    if NO_SEG:
+        for ann in anns:
+            del ann['segmentation']
+    lvis_data['annotations'] = anns
+    
+    print('# Images', len(lvis_data['images']))
+    print('# Anns', len(lvis_data['annotations']))
+    json.dump(lvis_data, open(SAVE_PATH, 'w'))
