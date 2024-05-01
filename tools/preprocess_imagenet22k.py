@@ -132,3 +132,18 @@ def preprocess():
         syn = log_files[k].replace(".tarlog", "")
         tarlog_files.append(os.path.join(i22ktarlogs, syn + ".tarlog"))
         tar_files.append(os.path.join(i22kdir, syn + ".tar"))
+        class_names.append(syn2class[syn])
+
+    tarlog_files = np.array(tarlog_files)
+    tar_files = np.array(tar_files)
+    class_names = np.array(class_names)
+    print(f"Have {len(class_names)} classes and {dataset_lens[dataset_valid].sum()} samples")
+
+    np.save(os.path.join(output_dir, "tarlog_files.npy"), tarlog_files)
+    np.save(os.path.join(output_dir, "tar_files.npy"), tar_files)
+    np.save(os.path.join(output_dir, "class_names.npy"), class_names)
+    np.save(os.path.join(output_dir, "tar_files.npy"), tar_files)
+
+
+if __name__ == "__main__":
+    preprocess()
