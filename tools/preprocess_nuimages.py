@@ -25,4 +25,18 @@ def get_updated_annotations(orig_annos, cls_id_to_remove=13):
         if ann_info['category_id'] == cls_id_to_remove:      # remove annotation for cls_id_to_remove
             continue
         elif ann_info['category_id'] > cls_id_to_remove:
-            new_ann_info = de
+            new_ann_info = deepcopy(ann_info)
+            new_ann_info['category_id'] -= 1 
+            new_annotations['annotations'].append(new_ann_info)
+        else:
+            new_annotations['annotations'].append(ann_info)
+            
+    for cat_info in orig_annos['categories']:
+        if cat_info['id'] == cls_id_to_remove:              # remove entry for cls_id_to_remove from all categories.
+            continue
+        elif cat_info['id']>cls_id_to_remove:
+            new_cat_info = deepcopy(cat_info)
+            new_cat_info['id']-=1
+            new_annotations['categories'].append(new_cat_info)
+        else:
+       
