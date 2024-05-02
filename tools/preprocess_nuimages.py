@@ -39,4 +39,19 @@ def get_updated_annotations(orig_annos, cls_id_to_remove=13):
             new_cat_info['id']-=1
             new_annotations['categories'].append(new_cat_info)
         else:
-       
+            new_annotations['categories'].append(cat_info)   
+    return new_annotations
+
+
+train_ann_file = args.train_ann_file
+val_ann_file = train_ann_file.replace('nuimages_v1.0-train.json', 'nuimages_v1.0-val.json')
+
+os.makedirs(args.base_save_dir, exist_ok=True)
+
+for base_ann_file in [train_ann_file, val_ann_file]:#, train_dummy_ann_file, val_dummy_ann_file]:
+    with open(base_ann_file, 'rb') as f:
+        dd = json.load(f)
+    updated_annos = get_updated_annotations(dd, args.wc_id)
+
+    new_save_path = os.path.join(args.base_save_dir, os.path.basename(base_ann_file))
+    with open(new_sa
