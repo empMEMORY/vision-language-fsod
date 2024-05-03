@@ -6,4 +6,20 @@
 ![teaser.png](assets/teaser.png)
 
 ## :star: [FSOD Challenge](https://eval.ai/web/challenges/challenge-page/2270/overview)
-This repository is
+This repository is part of the FSOD Challenge at CVPR 2024.
+
+## Abstract
+This repository features a new Few-shot object detection (FSOD) benchmark protocol, **Foundational FSOD**, that evaluates detectors pre-trained on any external datasets and fine-tuned on K-shots per target class.
+
+## Installation
+See [installation instructions](docs/INSTALL.md).
+
+## Data
+See [datasets/README.md](datasets/README.md)
+
+## Models
+Create `models/` in the root directory and download pre-trained model [here](https://huggingface.co/empMEMORY/vision-language-fsod/tree/main/pretrained_models/)
+
+## Training
+```python
+python train_net.py --num-gpus 1 --config-file <config_path>
