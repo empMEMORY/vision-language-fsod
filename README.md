@@ -22,4 +22,23 @@ Create `models/` in the root directory and download pre-trained model [here](htt
 
 ## Training
 ```python
-python train_net.py --num-gpus 1 --config-file <config_path>
+python train_net.py --num-gpus 1 --config-file <config_path>  --pred_all_class  OUTPUT_DIR_PREFIX <root_output_dir>
+```
+
+## Inference
+```python 
+python train_net.py --num-gpus 8 --config-file <config_path>  --pred_all_class --eval-only  MODEL.WEIGHTS <model_path> OUTPUT_DIR_PREFIX <root_output_dir>
+```
+
+## TODO
+- [x] Code cleanup 
+- [x] Release FSOD training files 
+- [ ] FIOD support and config
+- [ ] FSOD Data split creation : nuImages along with new split
+- [ ] Release trained model 
+
+- ------------
+- [ ] LVIS support in data and training models
+
+## Acknowledgment
+We thank the authors of the following 
