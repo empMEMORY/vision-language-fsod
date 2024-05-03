@@ -54,4 +54,5 @@ for base_ann_file in [train_ann_file, val_ann_file]:#, train_dummy_ann_file, val
     updated_annos = get_updated_annotations(dd, args.wc_id)
 
     new_save_path = os.path.join(args.base_save_dir, os.path.basename(base_ann_file))
-    with open(new_sa
+    with open(new_save_path, 'w') as f:
+        json.dump(updated_annos, f)
