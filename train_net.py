@@ -304,3 +304,90 @@ def setup(args):
     """
     Create configs and perform basic setups.
     """
+    cfg = get_cfg()
+    add_centernet_config(cfg)
+    add_detic_config(cfg)
+
+    cfg.merge_from_file(args.config_file)
+    cfg.merge_from_list(args.opts)
+
+    if cfg.OUTPUT_DIR_PREFIX is not None:
+        suffix_file_name = args.config_file.replace('configs/my_configs/','')[:-5]
+        cfg.OUTPUT_DIR = os.path.join(cfg.OUTPUT_DIR_PREFIX, suffix_file_name)
+
+    if not args.pred_all_class:
+        cfg.MODEL.ROI_HEADS.ONE_CLASS_PER_PROPOSAL = True
+    cfg.freeze()
+    default_setup(cfg, args)
+    setup_logger(output=cfg.OUTPUT_DIR, \
+        distributed_rank=comm.get_rank(), name="detic")
+    return cfg
+
+
+def main(args):
+
+    cfg = setup(args)
+
+    model = build_model(cfg)
+    logger.info("Model:\n{}".format(model))
+    if args.eval_only:
+        DetectionCheckpointer(model, save_dir=cfg.OUTPUT_DIR).resume_or_load(
+            cfg.MODEL.WEIGHTS, resume=args.resume
+        )
+        return do_test(cfg, model)
+    
+    else:
+        if cfg.MODEL.RESET_CLS_TRAIN:
+            reset_cls_test(
+                model,
+                cfg.MODEL.TRAIN_CLASSIFIERS[0],
+                cfg.MODEL.TRAIN_NUM_CLASSES[0])
+        []
+    distributed = comm.get_world_size() > 1
+    if distributed:
+        model = DistributedDataParallel(
+            model, device_ids=[comm.get_local_rank()], broadcast_buffers=False,
+            find_unused_parameters=cfg.FIND_UNUSED_PARAM
+        )
+
+    best_model_path = do_train(cfg, model, resume=args.resume)
+
+    if best_model_path is not None: # i.e using valset 
+        DetectionCheckpointer(model, save_dir=cfg.OUTPUT_DIR).resume_or_load(
+                best_model_path, resume=args.resume
+            )
+        print('Best model Path', best_model_path)
+        print('Running Test script with best model weights')
+        return do_test(cfg, model, path_suffix=best_model_path.split('.pth')[0])
+    else:
+        return []
+
+
+if __name__ == "__main__":
+    args = default_argument_parser()
+    
+    args = args.parse_args()
+    if args.num_machines == 1:
+        args.dist_url = 'tcp://127.0.0.1:{}'.format(
+            torch.randint(11111, 60000, (1,))[0].item())
+    else:
+        if args.dist_url == 'host':
+            args.dist_url = 'tcp://{}:12345'.format(
+                os.environ['SLURM_JOB_NODELIST'])
+        elif not args.dist_url.startswith('tcp'):
+            tmp = os.popen(
+                    'echo $(scontrol show job {} | grep BatchHost)'.format(
+                        args.dist_url)
+                ).read()
+            tmp = tmp[tmp.find('=') + 1: -1]
+            args.dist_url = 'tcp://{}:12345'.format(tmp)
+    print("Command Line Args:", args)
+
+    launch(
+        main,
+        args.num_gpus,
+        num_machines=args.num_machines,
+        machine_rank=args.machine_rank,
+        dist_url=args.dist_url,
+        args=(args,),
+    )
